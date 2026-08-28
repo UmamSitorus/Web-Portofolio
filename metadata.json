@@ -1,0 +1,8 @@
+{
+  "name": "Umami Sitorus Portfolio",
+  "description": "Personal portfolio website for Suib Umami Sitorus showcasing skills, services, projects, and contact info.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
