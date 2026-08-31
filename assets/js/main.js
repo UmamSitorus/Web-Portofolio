@@ -523,9 +523,10 @@ if (contactForm) {
         })
         .catch((error) => {
           console.error('EmailJS Error:', error);
+          const errMsg = error?.text || error?.message || JSON.stringify(error);
           if (contactStatus) {
             contactStatus.className = 'form-status-box show-error';
-            contactStatus.textContent = `❌ Gagal mengirim pesan. Silakan hubungi langsung via umamisuib@gmail.com atau WhatsApp (+62 856-5815-3551).`;
+            contactStatus.textContent = `❌ Gagal: ${errMsg}`;
           }
         })
         .finally(() => {
