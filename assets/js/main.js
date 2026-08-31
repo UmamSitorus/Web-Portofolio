@@ -481,7 +481,11 @@ modals.forEach((modal) => {
   });
 });
 
-// 10. Contact Form Submissions
+// 10. EmailJS Initialization & Contact Form Submissions
+if (typeof emailjs !== 'undefined') {
+  emailjs.init({ publicKey: 'pjf9Dx1DvtH-PxfxR' });
+}
+
 const contactForm = document.getElementById('contact-form');
 const contactStatus = document.getElementById('contact-message');
 
@@ -494,38 +498,51 @@ if (contactForm) {
     const projectType = document.getElementById('user_subject')?.value || '';
     const message = document.getElementById('user_project')?.value || '';
 
+    // Show sending state
+    const submitBtn = contactForm.querySelector('#btn-submit-contact');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="ri-loader-4-line"></i> <span>Mengirim...</span>';
+    }
+
     if (contactStatus) {
       contactStatus.className = 'form-status-box show-success';
       contactStatus.textContent = `Mengirim pesan... [POST /api/contact]`;
     }
 
-    // Try EmailJS if configured, otherwise provide immediate simulated confirmation
+    // Send via EmailJS
     if (typeof emailjs !== 'undefined' && emailjs.sendForm) {
       emailjs
-        .sendForm('service_cvygfmq', 'template_8rdin08', '#contact-form', 'pjf9Dx1DvtH-PxfxR')
+        .sendForm('service_cvygfmq', 'template_8rdin08', contactForm)
         .then(() => {
           if (contactStatus) {
             contactStatus.className = 'form-status-box show-success';
-            contactStatus.textContent = `Pesan terkirim dengan sukses! Terima kasih, ${name}. Saya akan membalas ke ${email} secepatnya.`;
+            contactStatus.textContent = `✅ Pesan terkirim dengan sukses! Terima kasih, ${name}. Saya akan membalas ke ${email} secepatnya.`;
           }
           contactForm.reset();
         })
-        .catch(() => {
-          // Fallback confirmation
+        .catch((error) => {
+          console.error('EmailJS Error:', error);
           if (contactStatus) {
-            contactStatus.className = 'form-status-box show-success';
-            contactStatus.textContent = `Pesan diterima (Mode Simulasi)! Terima kasih, ${name}. Silakan hubungi juga via umamisuib@gmail.com atau WhatsApp (+62 822-7798-8495).`;
+            contactStatus.className = 'form-status-box show-error';
+            contactStatus.textContent = `❌ Gagal mengirim pesan. Silakan hubungi langsung via umamisuib@gmail.com atau WhatsApp (+62 856-5815-3551).`;
           }
-          contactForm.reset();
+        })
+        .finally(() => {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="ri-send-plane-2-fill"></i> <span>Kirim Pesan Sekarang</span>';
+          }
         });
     } else {
-      setTimeout(() => {
-        if (contactStatus) {
-          contactStatus.className = 'form-status-box show-success';
-          contactStatus.textContent = `Pesan diterima! Terima kasih, ${name}. Saya akan segera merespons kebutuhan ${projectType} Anda.`;
-        }
-        contactForm.reset();
-      }, 500);
+      if (contactStatus) {
+        contactStatus.className = 'form-status-box show-error';
+        contactStatus.textContent = `❌ Layanan email belum tersedia. Silakan hubungi langsung via umamisuib@gmail.com atau WhatsApp (+62 856-5815-3551).`;
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="ri-send-plane-2-fill"></i> <span>Kirim Pesan Sekarang</span>';
+      }
     }
   });
 }
