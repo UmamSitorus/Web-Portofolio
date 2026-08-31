@@ -483,16 +483,16 @@ modals.forEach((modal) => {
 
 // 10. Contact Form Submissions
 const contactForm = document.getElementById('contact-form');
-const contactStatus = document.getElementById('form-status-box');
+const contactStatus = document.getElementById('contact-message');
 
 if (contactForm) {
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('contact-name')?.value || '';
-    const email = document.getElementById('contact-email')?.value || '';
-    const projectType = document.getElementById('contact-project-type')?.value || '';
-    const message = document.getElementById('contact-message')?.value || '';
+    const name = document.getElementById('user_name')?.value || '';
+    const email = document.getElementById('user_email')?.value || '';
+    const projectType = document.getElementById('user_subject')?.value || '';
+    const message = document.getElementById('user_project')?.value || '';
 
     if (contactStatus) {
       contactStatus.className = 'form-status-box show-success';
