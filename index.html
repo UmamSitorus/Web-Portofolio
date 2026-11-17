@@ -20,6 +20,7 @@
    <script src="https://cdn.tailwindcss.com"></script>
    <script>
       tailwind.config = {
+         darkMode: 'class',
          theme: {
             extend: {
                fontFamily: {
@@ -40,6 +41,20 @@
          },
       };
    </script>
+   <script>
+      // Prevent flash of wrong theme before first paint
+      (function () {
+         try {
+            const savedTheme = localStorage.getItem('umami_portfolio_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+               document.documentElement.classList.add('dark');
+            } else {
+               document.documentElement.classList.remove('dark');
+            }
+         } catch (e) {}
+      })();
+   </script>
 
    <style>
       :root {
@@ -52,6 +67,22 @@
          font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
          -webkit-font-smoothing: antialiased;
          -moz-osx-font-smoothing: grayscale;
+         transition: background-color 0.3s var(--ease-apple), color 0.3s var(--ease-apple);
+      }
+
+      html.dark body {
+         background-color: #09090B;
+         color: #FAFAFA;
+      }
+
+      /* Architectural Dot-Grid Background (Light & Dark Mode) */
+      .dot-grid-bg {
+         background-image: radial-gradient(#e4e4e7 1px, transparent 1px);
+         background-size: 20px 20px;
+      }
+
+      html.dark .dot-grid-bg {
+         background-image: radial-gradient(#27272A 1px, transparent 1px);
       }
 
       /* Scroll Reveal Animation */
@@ -94,7 +125,12 @@
          transition: filter 0.2s var(--ease-apple), transform 0.2s var(--ease-apple);
       }
 
-      .tech-item:hover .tech-icon {
+      html.dark .tech-item .tech-icon {
+         filter: grayscale(100%) opacity(0.75) brightness(1.15);
+      }
+
+      .tech-item:hover .tech-icon,
+      html.dark .tech-item:hover .tech-icon {
          filter: grayscale(0%) opacity(1);
          transform: scale(1.08);
       }
@@ -165,43 +201,60 @@
             padding: 0 !important;
             margin: 0 !important;
             background: #FFFFFF !important;
+            color: #18181B !important;
+         }
+         #cv-print-sheet * {
+            color: #18181B !important;
+            border-color: #E4E4E7 !important;
          }
       }
    </style>
 </head>
 
-<body class="bg-canvas text-ink selection:bg-ink selection:text-white">
+<body class="bg-canvas dark:bg-[#09090B] text-ink dark:text-[#FAFAFA] selection:bg-ink selection:text-white dark:selection:bg-[#FAFAFA] dark:selection:text-[#09090B] transition-colors duration-300">
 
    <!--==================== STICKY FROSTED-GLASS NAVBAR ====================-->
-   <header class="sticky top-0 z-40 h-16 bg-white/80 backdrop-blur-md border-b border-zinc-200/80">
+   <header class="sticky top-0 z-40 h-16 bg-white/80 dark:bg-[#09090B]/80 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 transition-colors duration-300">
       <div class="max-w-6xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 sm:gap-8">
          <!-- Brand Wordmark -->
-         <a href="#top" class="text-lg font-bold tracking-tight text-ink whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink rounded-md px-1">
+         <a href="#top" class="text-lg font-bold tracking-tight text-ink dark:text-[#FAFAFA] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink dark:focus-visible:ring-[#FAFAFA] rounded-md px-1 transition-colors">
             Umami.dev
          </a>
 
          <!-- Center Navigation Links (Desktop) -->
-         <nav aria-label="Navigasi Utama" class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
-            <a href="#about" class="hover:text-ink transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink" data-i18n="nav_about">Tentang</a>
-            <a href="#projects" class="hover:text-ink transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink" data-i18n="nav_projects">Proyek</a>
-            <a href="#credentials" class="hover:text-ink transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink" data-i18n="nav_credentials">Sertifikat</a>
-            <a href="#contact" class="hover:text-ink transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink" data-i18n="nav_contact">Kontak</a>
+         <nav aria-label="Navigasi Utama" class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600 dark:text-[#A1A1AA]">
+            <a href="#about" class="hover:text-ink dark:hover:text-[#FAFAFA] transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink dark:hover:border-[#FAFAFA]" data-i18n="nav_about">Tentang</a>
+            <a href="#projects" class="hover:text-ink dark:hover:text-[#FAFAFA] transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink dark:hover:border-[#FAFAFA]" data-i18n="nav_projects">Proyek</a>
+            <a href="#credentials" class="hover:text-ink dark:hover:text-[#FAFAFA] transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink dark:hover:border-[#FAFAFA]" data-i18n="nav_credentials">Sertifikat</a>
+            <a href="#contact" class="hover:text-ink dark:hover:text-[#FAFAFA] transition-colors duration-150 whitespace-nowrap shrink-0 py-1 border-b border-transparent hover:border-ink dark:hover:border-[#FAFAFA]" data-i18n="nav_contact">Kontak</a>
          </nav>
 
-         <!-- Right Action Zone: ID|EN Switch + Available Pill + Mobile Trigger -->
-         <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+         <!-- Right Action Zone: ID|EN Switch + Theme Toggle + Available Pill + Mobile Trigger -->
+         <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <!-- Bilingual ID | EN Toggle -->
-            <div class="inline-flex items-center p-0.5 rounded-full bg-zinc-100 border border-zinc-200/80" role="group" aria-label="Pilih bahasa">
-               <button type="button" id="lang-btn-id" onclick="setLanguage('id')" class="px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 bg-ink text-white shadow-sm">
+            <div class="inline-flex items-center p-0.5 rounded-full bg-zinc-100 dark:bg-[#18181B] border border-zinc-200/80 dark:border-zinc-800 transition-colors duration-300" role="group" aria-label="Pilih bahasa">
+               <button type="button" id="lang-btn-id" onclick="setLanguage('id')" class="px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-sm">
                   ID
                </button>
-               <button type="button" id="lang-btn-en" onclick="setLanguage('en')" class="px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 text-zinc-600 hover:text-ink">
+               <button type="button" id="lang-btn-en" onclick="setLanguage('en')" class="px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 text-zinc-600 hover:text-ink dark:text-zinc-400 dark:hover:text-[#FAFAFA]">
                   EN
                </button>
             </div>
 
+            <!-- Light / Dark Mode Theme Toggle -->
+            <button type="button" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Ganti tema terang atau gelap" aria-pressed="false" title="Light / Dark Mode" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 text-ink dark:text-[#FAFAFA] shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 shrink-0">
+               <!-- Sun icon (visible in Dark Mode) -->
+               <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364 6.364l-1.414-1.414M7.05 7.05L5.636 5.636m12.728 0l-1.414 1.414M7.05 16.95l-1.414 1.414M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+               </svg>
+               <!-- Moon icon (visible in Light Mode) -->
+               <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+               </svg>
+            </button>
+
             <!-- Available for Hire Status Pill -->
-            <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 text-xs font-semibold text-ink transition-colors duration-150 whitespace-nowrap shrink-0">
+            <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 hover:bg-zinc-200/80 dark:bg-[#18181B] dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-ink dark:text-[#FAFAFA] transition-colors duration-150 whitespace-nowrap shrink-0">
                <span class="relative flex h-2 w-2" aria-hidden="true">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -210,7 +263,7 @@
             </a>
 
             <!-- Mobile Menu Button -->
-            <button type="button" id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Buka menu navigasi" aria-expanded="false" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-zinc-200 bg-white text-ink hover:bg-zinc-50 transition-colors">
+            <button type="button" id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Buka menu navigasi" aria-expanded="false" class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-xl border-[1.5px] border-ink dark:border-zinc-700 bg-white dark:bg-[#18181B] text-ink dark:text-[#FAFAFA] hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
                <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/>
                </svg>
@@ -222,13 +275,13 @@
       </div>
 
       <!-- Mobile Dropdown Menu -->
-      <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-b border-zinc-200 px-4 py-4 space-y-2 shadow-sm">
-         <a href="#about" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-ink" data-i18n="nav_about">Tentang</a>
-         <a href="#projects" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-ink" data-i18n="nav_projects">Proyek</a>
-         <a href="#credentials" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-ink" data-i18n="nav_credentials">Sertifikat</a>
-         <a href="#contact" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-100 hover:text-ink" data-i18n="nav_contact">Kontak</a>
-         <div class="pt-2 border-t border-zinc-100">
-            <a href="#contact" onclick="closeMobileMenu()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-ink text-white text-xs font-semibold">
+      <div id="mobile-menu" class="hidden md:hidden bg-white/95 dark:bg-[#09090B]/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 px-4 py-4 space-y-2 shadow-sm transition-colors duration-300">
+         <a href="#about" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-ink dark:hover:text-[#FAFAFA]" data-i18n="nav_about">Tentang</a>
+         <a href="#projects" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-ink dark:hover:text-[#FAFAFA]" data-i18n="nav_projects">Proyek</a>
+         <a href="#credentials" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-ink dark:hover:text-[#FAFAFA]" data-i18n="nav_credentials">Sertifikat</a>
+         <a href="#contact" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-ink dark:hover:text-[#FAFAFA]" data-i18n="nav_contact">Kontak</a>
+         <div class="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+            <a href="#contact" onclick="closeMobileMenu()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] text-xs font-semibold">
                <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
                <span data-i18n="nav_status">Siap Bekerja (Available)</span>
             </a>
@@ -238,41 +291,41 @@
 
    <main id="top">
       <!--==================== HERO SECTION (ASYMMETRIC SPLIT + GEOMETRIC PORTRAIT CARD) ====================-->
-      <section class="relative pt-12 pb-16 sm:pt-20 sm:pb-24 px-4 sm:px-6 lg:px-8 bg-[radial-gradient(#e4e4e7_1px,transparent_1px)] [background-size:20px_20px] border-b border-hairline">
+      <section class="relative pt-12 pb-16 sm:pt-20 sm:pb-24 px-4 sm:px-6 lg:px-8 dot-grid-bg border-b border-hairline dark:border-zinc-800 transition-colors duration-300">
          <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
             <!-- Left Column: Editorial Intro -->
             <div class="lg:col-span-7 space-y-6">
-               <div class="inline-flex flex-wrap items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border-[1.5px] border-ink shadow-[3px_3px_0px_0px_#18181B] text-xs font-medium text-ink">
-                  <span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-tight text-emerald-700">
+               <div class="inline-flex flex-wrap items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[3px_3px_0px_0px_#18181B] dark:shadow-[3px_3px_0px_0px_#3F3F46] text-xs font-medium text-ink dark:text-[#FAFAFA] transition-colors duration-300">
+                  <span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-tight text-emerald-700 dark:text-emerald-400">
                      <span class="relative flex h-2 w-2" aria-hidden="true">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                      </span>
                      [ SYS.READY ]
                   </span>
-                  <span class="text-zinc-300" aria-hidden="true">|</span>
+                  <span class="text-zinc-300 dark:text-zinc-700" aria-hidden="true">|</span>
                   <span data-i18n="hero_badge">Tersertifikasi Google AI · Spesialis Sistem &amp; Otomasi</span>
                </div>
 
-               <h1 class="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-ink leading-[1.08] max-w-2xl" style="text-wrap: balance;" data-i18n="hero_headline">
+               <h1 class="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-ink dark:text-[#FAFAFA] leading-[1.08] max-w-2xl transition-colors duration-300" style="text-wrap: balance;" data-i18n="hero_headline">
                   Membangun Sistem Otomatis yang Menghemat Waktu Kerja.
                </h1>
 
-               <p class="text-base sm:text-lg text-slateMuted leading-relaxed max-w-xl" data-i18n="hero_bio">
+               <p class="text-base sm:text-lg text-slateMuted dark:text-[#A1A1AA] leading-relaxed max-w-xl transition-colors duration-300" data-i18n="hero_bio">
                   Saya Suib Umami Sitorus. Saya membantu bisnis mengubah tugas manual yang berulang menjadi sistem web dan otomasi yang berjalan rapi 24/7.
                </p>
 
                <!-- Primary & Secondary Tactile CTAs (4px Hard-Offset) -->
                <div class="flex flex-wrap items-center gap-4 pt-2">
-                  <a href="#projects" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-ink text-white border-[1.5px] border-ink text-sm font-semibold shadow-[4px_4px_0px_0px_#71717A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#71717A] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                  <a href="#projects" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] border-[1.5px] border-ink dark:border-[#FAFAFA] text-sm font-semibold shadow-[4px_4px_0px_0px_#71717A] dark:shadow-[4px_4px_0px_0px_#52525B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#71717A] dark:hover:shadow-[2px_2px_0px_0px_#52525B] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
                      <span data-i18n="hero_cta_projects">Lihat Proyek</span>
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                      </svg>
                   </a>
 
-                  <button type="button" onclick="openCvModal()" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-ink border-[1.5px] border-ink text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
-                     <svg class="w-4 h-4 text-ink" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <button type="button" onclick="openCvModal()" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-[#121215] text-ink dark:text-[#FAFAFA] border-[1.5px] border-ink dark:border-zinc-700 text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] dark:shadow-[4px_4px_0px_0px_#3F3F46] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] dark:hover:shadow-[2px_2px_0px_0px_#3F3F46] active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                     <svg class="w-4 h-4 text-ink dark:text-[#FAFAFA]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/>
                      </svg>
                      <span data-i18n="hero_cta_cv">Unduh CV</span>
@@ -280,11 +333,11 @@
                </div>
 
                <!-- Crisp Monospace Proof Strip -->
-               <div class="pt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs font-medium text-zinc-600">
+               <div class="pt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs font-medium text-zinc-600 dark:text-[#A1A1AA]">
                   <span data-i18n="hero_meta_1">8x Sertifikat Google AI</span>
-                  <span class="text-zinc-300" aria-hidden="true">/</span>
+                  <span class="text-zinc-300 dark:text-zinc-700" aria-hidden="true">/</span>
                   <span data-i18n="hero_meta_2">Tersertifikasi Komdigi</span>
-                  <span class="text-zinc-300" aria-hidden="true">/</span>
+                  <span class="text-zinc-300 dark:text-zinc-700" aria-hidden="true">/</span>
                   <span data-i18n="hero_meta_3">Berbasis di Indonesia (Siap Remote)</span>
                </div>
             </div>
@@ -293,26 +346,26 @@
             <div class="lg:col-span-5 flex justify-center lg:justify-end">
                <div class="relative w-full max-w-[380px] p-2">
                   <!-- Corner Registration Crosshairs (+) & Minimal Geometric Markers -->
-                  <span aria-hidden="true" class="absolute -top-1 -left-1 font-mono text-xs font-bold text-ink select-none">+</span>
-                  <span aria-hidden="true" class="absolute -top-1 -right-1 font-mono text-xs font-bold text-ink select-none">+</span>
-                  <span aria-hidden="true" class="absolute -bottom-1 -left-1 font-mono text-xs font-bold text-ink select-none">+</span>
-                  <span aria-hidden="true" class="absolute -bottom-1 -right-1 font-mono text-xs font-bold text-ink select-none">+</span>
-                  <span aria-hidden="true" class="hidden sm:block absolute -top-3 right-10 w-2.5 h-2.5 rounded-full border-[1.5px] border-ink bg-white"></span>
-                  <span aria-hidden="true" class="hidden sm:block absolute top-12 -left-3 w-2.5 h-2.5 border-[1.5px] border-ink bg-emerald-400"></span>
+                  <span aria-hidden="true" class="absolute -top-1 -left-1 font-mono text-xs font-bold text-ink dark:text-zinc-400 select-none">+</span>
+                  <span aria-hidden="true" class="absolute -top-1 -right-1 font-mono text-xs font-bold text-ink dark:text-zinc-400 select-none">+</span>
+                  <span aria-hidden="true" class="absolute -bottom-1 -left-1 font-mono text-xs font-bold text-ink dark:text-zinc-400 select-none">+</span>
+                  <span aria-hidden="true" class="absolute -bottom-1 -right-1 font-mono text-xs font-bold text-ink dark:text-zinc-400 select-none">+</span>
+                  <span aria-hidden="true" class="hidden sm:block absolute -top-3 right-10 w-2.5 h-2.5 rounded-full border-[1.5px] border-ink dark:border-zinc-500 bg-white dark:bg-[#121215]"></span>
+                  <span aria-hidden="true" class="hidden sm:block absolute top-12 -left-3 w-2.5 h-2.5 border-[1.5px] border-ink dark:border-zinc-700 bg-emerald-400"></span>
 
                   <!-- Top Frame Label -->
-                  <div class="flex items-center justify-between px-1 pb-2 font-mono text-[10px] font-semibold tracking-wider text-zinc-500">
+                  <div class="flex items-center justify-between px-1 pb-2 font-mono text-[10px] font-semibold tracking-wider text-zinc-500 dark:text-zinc-400">
                      <span>FIG. 01 — PORTRAIT</span>
-                     <span class="inline-flex items-center gap-1.5 text-emerald-700">
+                     <span class="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
                         ONLINE
                      </span>
                   </div>
 
                   <!-- Portrait Frame (4:5 aspect ratio, 1.5px border, 4px hard-offset) -->
-                  <div class="relative aspect-[4/5] w-full rounded-[1.75rem] bg-surface border-[1.5px] border-ink overflow-hidden shadow-[4px_4px_0px_0px_#18181B]">
+                  <div class="relative aspect-[4/5] w-full rounded-[1.75rem] bg-surface dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 overflow-hidden shadow-[4px_4px_0px_0px_#18181B] dark:shadow-[4px_4px_0px_0px_#3F3F46] transition-colors duration-300">
                      <!-- Subtle Studio Radial Lighting -->
-                     <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-zinc-100/40 to-zinc-200/60 pointer-events-none"></div>
+                     <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-zinc-100/40 to-zinc-200/60 dark:from-zinc-800/35 dark:via-zinc-900/20 dark:to-black/50 pointer-events-none"></div>
 
                      <!-- REPLACE PHOTO HERE: Recommended 4:5 portrait ratio (e.g. 800x1000px), soft neutral or transparent PNG background -->
                      <img
@@ -324,30 +377,30 @@
                      />
 
                      <!-- Zero-Broken-Image Fallback Container -->
-                     <div id="portrait-fallback" class="hidden absolute inset-0 z-10 flex flex-col items-center justify-center bg-surface text-ink p-8 text-center">
-                        <div class="w-20 h-20 rounded-full bg-white border-[1.5px] border-ink flex items-center justify-center text-2xl font-bold tracking-tight shadow-[2px_2px_0px_0px_#18181B] mb-3">
+                     <div id="portrait-fallback" class="hidden absolute inset-0 z-10 flex flex-col items-center justify-center bg-surface dark:bg-[#121215] text-ink dark:text-[#FAFAFA] p-8 text-center">
+                        <div class="w-20 h-20 rounded-full bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 flex items-center justify-center text-2xl font-bold tracking-tight shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] mb-3">
                            SU
                         </div>
-                        <p class="text-sm font-semibold text-ink">Suib Umami Sitorus</p>
-                        <p class="font-mono text-xs text-slateMuted mt-1">[ BACKEND &amp; AI ]</p>
+                        <p class="text-sm font-semibold text-ink dark:text-[#FAFAFA]">Suib Umami Sitorus</p>
+                        <p class="font-mono text-xs text-slateMuted dark:text-[#A1A1AA] mt-1">[ BACKEND &amp; AI ]</p>
                      </div>
                   </div>
 
                   <!-- Floating Frosted-Glass Monospace Micro-Card 1 (Bottom Left) -->
-                  <div class="absolute -bottom-3 -left-2 sm:-left-6 z-20 px-3.5 py-2.5 rounded-2xl bg-white/95 backdrop-blur-md border-[1.5px] border-ink shadow-[3px_3px_0px_0px_#18181B] flex items-center gap-3">
-                     <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-sm shrink-0" aria-hidden="true">⚡</span>
+                  <div class="absolute -bottom-3 -left-2 sm:-left-6 z-20 px-3.5 py-2.5 rounded-2xl bg-white/95 dark:bg-[#18181B]/90 backdrop-blur-md border-[1.5px] border-ink dark:border-zinc-700 shadow-[3px_3px_0px_0px_#18181B] dark:shadow-[3px_3px_0px_0px_#3F3F46] flex items-center gap-3 transition-colors duration-300">
+                     <span class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800/80 flex items-center justify-center text-sm shrink-0" aria-hidden="true">⚡</span>
                      <div>
-                        <p class="font-mono text-[11px] font-bold text-ink leading-tight tabular-nums" data-i18n="float_card_1_title">Hemat 90% Kerja Manual</p>
-                        <p class="font-mono text-[10px] text-emerald-700 leading-tight mt-0.5" data-i18n="float_card_1_sub">Berjalan Otomatis 24/7</p>
+                        <p class="font-mono text-[11px] font-bold text-ink dark:text-[#FAFAFA] leading-tight tabular-nums" data-i18n="float_card_1_title">Hemat 90% Kerja Manual</p>
+                        <p class="font-mono text-[10px] text-emerald-700 dark:text-emerald-400 leading-tight mt-0.5" data-i18n="float_card_1_sub">Berjalan Otomatis 24/7</p>
                      </div>
                   </div>
 
                   <!-- Floating Frosted-Glass Monospace Micro-Card 2 (Bottom Right) -->
-                  <div class="absolute bottom-12 -right-2 sm:-right-6 z-20 px-3.5 py-2.5 rounded-2xl bg-white/95 backdrop-blur-md border-[1.5px] border-ink shadow-[3px_3px_0px_0px_#18181B] flex items-center gap-3">
-                     <span class="w-8 h-8 rounded-xl bg-surface border border-zinc-300 flex items-center justify-center text-sm shrink-0" aria-hidden="true">🎓</span>
+                  <div class="absolute bottom-12 -right-2 sm:-right-6 z-20 px-3.5 py-2.5 rounded-2xl bg-white/95 dark:bg-[#18181B]/90 backdrop-blur-md border-[1.5px] border-ink dark:border-zinc-700 shadow-[3px_3px_0px_0px_#18181B] dark:shadow-[3px_3px_0px_0px_#3F3F46] flex items-center gap-3 transition-colors duration-300">
+                     <span class="w-8 h-8 rounded-xl bg-surface dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 flex items-center justify-center text-sm shrink-0" aria-hidden="true">🎓</span>
                      <div>
-                        <p class="font-mono text-[11px] font-bold text-ink leading-tight" data-i18n="float_card_2_title">S1 Teknologi Informasi</p>
-                        <p class="font-mono text-[10px] text-slateMuted leading-tight mt-0.5" data-i18n="float_card_2_sub">Universitas Teuku Umar</p>
+                        <p class="font-mono text-[11px] font-bold text-ink dark:text-[#FAFAFA] leading-tight" data-i18n="float_card_2_title">S1 Teknologi Informasi</p>
+                        <p class="font-mono text-[10px] text-slateMuted dark:text-[#A1A1AA] leading-tight mt-0.5" data-i18n="float_card_2_sub">Universitas Teuku Umar</p>
                      </div>
                   </div>
                </div>
@@ -356,77 +409,77 @@
       </section>
 
       <!--==================== TECH STACK INFINITE MARQUEE ====================-->
-      <section class="py-8 border-y border-hairline bg-white overflow-hidden" aria-label="Technology Stack">
+      <section class="py-8 border-y border-hairline dark:border-zinc-800 bg-white dark:bg-[#121215] overflow-hidden transition-colors duration-300" aria-label="Technology Stack">
          <div class="marquee-wrapper relative">
             <div class="marquee-track flex items-center gap-12 sm:gap-16 px-6">
                <!-- Set 1 -->
                <div class="flex items-center gap-12 sm:gap-16 shrink-0">
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#777BB4"><path d="M12 5C5.373 5 0 8.134 0 12s5.373 7 12 7 12-3.134 12-7-5.373-7-12-7zm-4.12 9.48h-1.6l.53-2.75H5.57l-.53 2.75H3.45l1.16-6h1.6l-.48 2.48h1.24l.48-2.48h1.6l-1.17 6zm4.66 0H10.9l.53-2.75h-1.24l-.53 2.75H8.07l1.16-6h1.6l-.48 2.48h1.24l.48-2.48h1.6l-1.13 6zm6.01-1.95c-.3.92-1.1 1.45-2.22 1.45h-1.36l-.31 1.5h-1.6l1.16-6h2.71c1.38 0 2.09.78 1.82 2.13l-.2.92zm-1.65-.9c.11-.56-.17-.82-.74-.82h-.95l-.36 1.85h.95c.6 0 .99-.33 1.1-1.03z"/></svg>
                      <span class="whitespace-nowrap">PHP</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#FF2D20"><path d="M23.642 5.43a.364.364 0 01.014.1v5.149c0 .135-.073.26-.189.326l-4.323 2.49v4.934a.378.378 0 01-.188.326L9.93 23.949a.316.316 0 01-.066.027c-.008.002-.016.008-.024.01a.348.348 0 01-.192 0c-.011-.002-.02-.008-.03-.012-.02-.008-.042-.014-.062-.025L.533 18.755a.376.376 0 01-.189-.326V2.974c0-.033.005-.066.014-.098.003-.012.01-.02.014-.032a.369.369 0 01.023-.058c.004-.013.015-.022.023-.033l.033-.045c.012-.01.025-.018.037-.027.014-.012.027-.024.041-.034H.53L4.985.05a.376.376 0 01.377 0l4.455 2.596.002.002c.014.01.027.022.04.033l.038.027.033.045c.008.011.018.02.023.033.01.02.018.038.023.058.005.011.011.02.014.032.01.032.015.065.015.098v9.652l3.76-2.164V5.53c0-.033.004-.066.013-.1.003-.011.01-.02.014-.031.007-.02.015-.04.024-.059.007-.012.016-.021.024-.032.01-.016.02-.031.032-.045.012-.011.025-.018.038-.028.013-.011.026-.023.04-.032l4.456-2.598a.376.376 0 01.376 0l4.455 2.598c.014.01.028.021.041.032.013.01.026.017.037.028.013.014.023.03.033.045.008.011.017.02.023.032.01.02.018.038.024.059.004.011.01.02.014.031z"/></svg>
                      <span class="whitespace-nowrap">Laravel</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.604.065-.037.151-.023.218.017l2.256 1.339c.082.045.197.045.272 0l8.795-5.076c.082-.047.134-.141.134-.238V6.921c0-.099-.053-.192-.137-.242l-8.791-5.072c-.081-.047-.189-.047-.271 0L3.075 6.68c-.084.049-.139.144-.139.241v10.151c0 .096.054.188.138.236l2.409 1.392c1.307.654 2.108-.116 2.108-.89V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.112.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675A1.854 1.854 0 011.357 17.07V6.92c0-.664.355-1.281.928-1.61l8.795-5.081c.558-.315 1.298-.315 1.855 0l8.793 5.083c.573.33.927.946.927 1.608v10.15c0 .662-.355 1.279-.928 1.608l-8.795 5.076a1.86 1.86 0 01-.934.246z"/></svg>
                      <span class="whitespace-nowrap">Node.js</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#4479A1"><path d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.111.18.181.246l.282.228c.193.133.437.274.742.369.299.093.643.138 1.008.138.133 0 .266-.008.393-.025l.043.005c.281.033.541.106.768.215a1.52 1.52 0 01.556.45c.148.204.225.45.225.736 0 .35-.113.663-.337.94-.223.277-.527.493-.91.646-.384.153-.81.23-1.279.23-.535 0-1.015-.097-1.438-.291-.424-.195-.756-.474-.997-.838l-.033-.05-.655.442.03.05c.308.477.723.849 1.247 1.116.524.266 1.132.4 1.825.4.651 0 1.238-.111 1.76-.334.522-.222.931-.536 1.229-.942.297-.405.446-.873.446-1.404 0-.427-.11-.806-.33-1.136-.22-.33-.523-.586-.908-.769-.386-.183-.832-.286-1.338-.308l-.034-.002a4.68 4.68 0 01-.85-.101c-.242-.057-.444-.143-.606-.257-.162-.115-.243-.265-.243-.452 0-.213.095-.387.285-.524.19-.137.448-.205.774-.205.335 0 .629.064.881.192.253.128.448.316.587.563l.026.046.632-.442-.026-.044a2.03 2.03 0 00-.826-.784c-.363-.187-.79-.28-1.281-.28-.455 0-.86.082-1.213.245-.353.164-.629.391-.827.682-.199.29-.298.622-.298.996 0 .115.013.225.039.329zM4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v12h16V6H4z"/></svg>
                      <span class="whitespace-nowrap">MySQL</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#0F766E"><path d="M12 2a10 10 0 1010 10A10.011 10.011 0 0012 2zm0 18a8 8 0 118-8 8.009 8.009 0 01-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
                      <span class="whitespace-nowrap">Cron Jobs</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#2563EB"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
                      <span class="whitespace-nowrap">Google AI</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#F05032"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187z"/></svg>
                      <span class="whitespace-nowrap">Git</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
-                     <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#18181B"><path d="M12 2C9.24 2 7 4.24 7 7v3.25C5.76 11.41 5 13.06 5 15c0 3.31 2.69 6 6 6h2c3.31 0 6-2.69 6-6 0-1.94-.76-3.59-2-4.75V7c0-2.76-2.24-5-5-5zm-1.5 5.5a1 1 0 110 2 1 1 0 010-2zm3 0a1 1 0 110 2 1 1 0 010-2zM12 11c1.1 0 2 .67 2 1.5S13.1 14 12 14s-2-.67-2-1.5S10.9 11 12 11z"/></svg>
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
+                     <svg class="tech-icon w-6 h-6 shrink-0 text-ink dark:text-[#FAFAFA]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7v3.25C5.76 11.41 5 13.06 5 15c0 3.31 2.69 6 6 6h2c3.31 0 6-2.69 6-6 0-1.94-.76-3.59-2-4.75V7c0-2.76-2.24-5-5-5zm-1.5 5.5a1 1 0 110 2 1 1 0 010-2zm3 0a1 1 0 110 2 1 1 0 010-2zM12 11c1.1 0 2 .67 2 1.5S13.1 14 12 14s-2-.67-2-1.5S10.9 11 12 11z"/></svg>
                      <span class="whitespace-nowrap">Linux</span>
                   </div>
                </div>
 
                <!-- Set 2 (Duplicate for seamless infinite loop) -->
                <div class="flex items-center gap-12 sm:gap-16 shrink-0" aria-hidden="true">
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#777BB4"><path d="M12 5C5.373 5 0 8.134 0 12s5.373 7 12 7 12-3.134 12-7-5.373-7-12-7zm-4.12 9.48h-1.6l.53-2.75H5.57l-.53 2.75H3.45l1.16-6h1.6l-.48 2.48h1.24l.48-2.48h1.6l-1.17 6zm4.66 0H10.9l.53-2.75h-1.24l-.53 2.75H8.07l1.16-6h1.6l-.48 2.48h1.24l.48-2.48h1.6l-1.13 6zm6.01-1.95c-.3.92-1.1 1.45-2.22 1.45h-1.36l-.31 1.5h-1.6l1.16-6h2.71c1.38 0 2.09.78 1.82 2.13l-.2.92zm-1.65-.9c.11-.56-.17-.82-.74-.82h-.95l-.36 1.85h.95c.6 0 .99-.33 1.1-1.03z"/></svg>
                      <span class="whitespace-nowrap">PHP</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#FF2D20"><path d="M23.642 5.43a.364.364 0 01.014.1v5.149c0 .135-.073.26-.189.326l-4.323 2.49v4.934a.378.378 0 01-.188.326L9.93 23.949a.316.316 0 01-.066.027c-.008.002-.016.008-.024.01a.348.348 0 01-.192 0c-.011-.002-.02-.008-.03-.012-.02-.008-.042-.014-.062-.025L.533 18.755a.376.376 0 01-.189-.326V2.974c0-.033.005-.066.014-.098.003-.012.01-.02.014-.032a.369.369 0 01.023-.058c.004-.013.015-.022.023-.033l.033-.045c.012-.01.025-.018.037-.027.014-.012.027-.024.041-.034H.53L4.985.05a.376.376 0 01.377 0l4.455 2.596.002.002c.014.01.027.022.04.033l.038.027.033.045c.008.011.018.02.023.033.01.02.018.038.023.058.005.011.011.02.014.032.01.032.015.065.015.098v9.652l3.76-2.164V5.53c0-.033.004-.066.013-.1.003-.011.01-.02.014-.031.007-.02.015-.04.024-.059.007-.012.016-.021.024-.032.01-.016.02-.031.032-.045.012-.011.025-.018.038-.028.013-.011.026-.023.04-.032l4.456-2.598a.376.376 0 01.376 0l4.455 2.598c.014.01.028.021.041.032.013.01.026.017.037.028.013.014.023.03.033.045.008.011.017.02.023.032.01.02.018.038.024.059.004.011.01.02.014.031z"/></svg>
                      <span class="whitespace-nowrap">Laravel</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#339933"><path d="M11.998 24c-.321 0-.641-.084-.922-.247l-2.936-1.737c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.604.065-.037.151-.023.218.017l2.256 1.339c.082.045.197.045.272 0l8.795-5.076c.082-.047.134-.141.134-.238V6.921c0-.099-.053-.192-.137-.242l-8.791-5.072c-.081-.047-.189-.047-.271 0L3.075 6.68c-.084.049-.139.144-.139.241v10.151c0 .096.054.188.138.236l2.409 1.392c1.307.654 2.108-.116 2.108-.89V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.112.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675A1.854 1.854 0 011.357 17.07V6.92c0-.664.355-1.281.928-1.61l8.795-5.081c.558-.315 1.298-.315 1.855 0l8.793 5.083c.573.33.927.946.927 1.608v10.15c0 .662-.355 1.279-.928 1.608l-8.795 5.076a1.86 1.86 0 01-.934.246z"/></svg>
                      <span class="whitespace-nowrap">Node.js</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#4479A1"><path d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.111.18.181.246l.282.228c.193.133.437.274.742.369.299.093.643.138 1.008.138.133 0 .266-.008.393-.025l.043.005c.281.033.541.106.768.215a1.52 1.52 0 01.556.45c.148.204.225.45.225.736 0 .35-.113.663-.337.94-.223.277-.527.493-.91.646-.384.153-.81.23-1.279.23-.535 0-1.015-.097-1.438-.291-.424-.195-.756-.474-.997-.838l-.033-.05-.655.442.03.05c.308.477.723.849 1.247 1.116.524.266 1.132.4 1.825.4.651 0 1.238-.111 1.76-.334.522-.222.931-.536 1.229-.942.297-.405.446-.873.446-1.404 0-.427-.11-.806-.33-1.136-.22-.33-.523-.586-.908-.769-.386-.183-.832-.286-1.338-.308l-.034-.002a4.68 4.68 0 01-.85-.101c-.242-.057-.444-.143-.606-.257-.162-.115-.243-.265-.243-.452 0-.213.095-.387.285-.524.19-.137.448-.205.774-.205.335 0 .629.064.881.192.253.128.448.316.587.563l.026.046.632-.442-.026-.044a2.03 2.03 0 00-.826-.784c-.363-.187-.79-.28-1.281-.28-.455 0-.86.082-1.213.245-.353.164-.629.391-.827.682-.199.29-.298.622-.298.996 0 .115.013.225.039.329zM4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v12h16V6H4z"/></svg>
                      <span class="whitespace-nowrap">MySQL</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#0F766E"><path d="M12 2a10 10 0 1010 10A10.011 10.011 0 0012 2zm0 18a8 8 0 118-8 8.009 8.009 0 01-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
                      <span class="whitespace-nowrap">Cron Jobs</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#2563EB"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
                      <span class="whitespace-nowrap">Google AI</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
                      <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#F05032"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187z"/></svg>
                      <span class="whitespace-nowrap">Git</span>
                   </div>
-                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-ink transition-colors">
-                     <svg class="tech-icon w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="#18181B"><path d="M12 2C9.24 2 7 4.24 7 7v3.25C5.76 11.41 5 13.06 5 15c0 3.31 2.69 6 6 6h2c3.31 0 6-2.69 6-6 0-1.94-.76-3.59-2-4.75V7c0-2.76-2.24-5-5-5zm-1.5 5.5a1 1 0 110 2 1 1 0 010-2zm3 0a1 1 0 110 2 1 1 0 010-2zM12 11c1.1 0 2 .67 2 1.5S13.1 14 12 14s-2-.67-2-1.5S10.9 11 12 11z"/></svg>
+                  <div class="tech-item flex items-center gap-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-ink dark:hover:text-[#FAFAFA] transition-colors">
+                     <svg class="tech-icon w-6 h-6 shrink-0 text-ink dark:text-[#FAFAFA]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7v3.25C5.76 11.41 5 13.06 5 15c0 3.31 2.69 6 6 6h2c3.31 0 6-2.69 6-6 0-1.94-.76-3.59-2-4.75V7c0-2.76-2.24-5-5-5zm-1.5 5.5a1 1 0 110 2 1 1 0 010-2zm3 0a1 1 0 110 2 1 1 0 010-2zM12 11c1.1 0 2 .67 2 1.5S13.1 14 12 14s-2-.67-2-1.5S10.9 11 12 11z"/></svg>
                      <span class="whitespace-nowrap">Linux</span>
                   </div>
                </div>
@@ -435,66 +488,66 @@
       </section>
 
       <!--==================== BENTO GRID: WHAT I DO ====================-->
-      <section id="about" class="py-20 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <section id="about" class="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
          <div class="max-w-6xl mx-auto">
             <div class="reveal max-w-2xl mb-12">
-               <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink mb-3">
+               <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink dark:text-[#FAFAFA] mb-3">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
                   <span>[ 01 // BACKEND ]</span>
                </div>
-               <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink" style="text-wrap: balance;" data-i18n="about_heading">
+               <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink dark:text-[#FAFAFA]" style="text-wrap: balance;" data-i18n="about_heading">
                   Apa yang Saya Kerjakan
                </h2>
-               <p class="mt-3 text-base text-slateMuted leading-relaxed" data-i18n="about_subtitle">
+               <p class="mt-3 text-base text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="about_subtitle">
                   Sistem web yang rapi, cepat, dan dirancang agar pekerjaan tim Anda jauh lebih ringan.
                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                <!-- Bento Card 1 (2px Hard-Offset) -->
-               <article class="reveal relative group rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple">
-                  <span aria-hidden="true" class="absolute top-5 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
-                  <div class="w-12 h-12 rounded-2xl bg-emerald-50 border-[1.5px] border-ink text-emerald-700 flex items-center justify-center mb-6">
+               <article class="reveal relative group rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple">
+                  <span aria-hidden="true" class="absolute top-5 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border-[1.5px] border-ink dark:border-emerald-700/70 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mb-6">
                      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"/>
                      </svg>
                   </div>
-                  <h3 class="text-lg font-bold text-ink tracking-tight mb-2.5" data-i18n="bento_1_title">
+                  <h3 class="text-lg font-bold text-ink dark:text-[#FAFAFA] tracking-tight mb-2.5" data-i18n="bento_1_title">
                      Otomasi Tugas Harian 24/7
                   </h3>
-                  <p class="text-sm text-slateMuted leading-relaxed" data-i18n="bento_1_desc">
+                  <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="bento_1_desc">
                      Sistem pengingat WhatsApp, pengiriman email, dan rekap data otomatis yang bekerja nonstop tanpa perlu diklik manual.
                   </p>
                </article>
 
                <!-- Bento Card 2 (2px Hard-Offset) -->
-               <article class="reveal relative group rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple">
-                  <span aria-hidden="true" class="absolute top-5 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
-                  <div class="w-12 h-12 rounded-2xl bg-blue-50 border-[1.5px] border-ink text-blue-700 flex items-center justify-center mb-6">
+               <article class="reveal relative group rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple">
+                  <span aria-hidden="true" class="absolute top-5 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
+                  <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border-[1.5px] border-ink dark:border-blue-700/70 text-blue-700 dark:text-blue-400 flex items-center justify-center mb-6">
                      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                      </svg>
                   </div>
-                  <h3 class="text-lg font-bold text-ink tracking-tight mb-2.5" data-i18n="bento_2_title">
+                  <h3 class="text-lg font-bold text-ink dark:text-[#FAFAFA] tracking-tight mb-2.5" data-i18n="bento_2_title">
                      Sistem Web &amp; Pembayaran Cepat
                   </h3>
-                  <p class="text-sm text-slateMuted leading-relaxed" data-i18n="bento_2_desc">
+                  <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="bento_2_desc">
                      Website bisnis dan verifikasi pembayaran otomatis yang aman, cepat, serta bebas error atau data ganda.
                   </p>
                </article>
 
                <!-- Bento Card 3 (2px Hard-Offset) -->
-               <article class="reveal relative group rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple">
-                  <span aria-hidden="true" class="absolute top-5 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
-                  <div class="w-12 h-12 rounded-2xl bg-amber-50 border-[1.5px] border-ink text-amber-700 flex items-center justify-center mb-6">
+               <article class="reveal relative group rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple">
+                  <span aria-hidden="true" class="absolute top-5 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
+                  <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border-[1.5px] border-ink dark:border-amber-700/70 text-amber-700 dark:text-amber-400 flex items-center justify-center mb-6">
                      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>
                      </svg>
                   </div>
-                  <h3 class="text-lg font-bold text-ink tracking-tight mb-2.5" data-i18n="bento_3_title">
+                  <h3 class="text-lg font-bold text-ink dark:text-[#FAFAFA] tracking-tight mb-2.5" data-i18n="bento_3_title">
                      Integrasi AI &amp; Laporan Otomatis
                   </h3>
-                  <p class="text-sm text-slateMuted leading-relaxed" data-i18n="bento_3_desc">
+                  <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="bento_3_desc">
                      Menghubungkan kecerdasan buatan (Google AI) dan database agar laporan bisnis tersaji rapi secara otomatis.
                   </p>
                </article>
@@ -503,37 +556,37 @@
       </section>
 
       <!--==================== FEATURED PROJECTS (HORIZONTAL CAROUSEL + TABS) ====================-->
-      <section id="projects" class="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white border-y border-hairline">
+      <section id="projects" class="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0D0D10] border-y border-hairline dark:border-zinc-800 transition-colors duration-300">
          <div class="max-w-6xl mx-auto">
             <!-- Section Header + Controls -->
             <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
                <div class="max-w-xl">
-                  <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink mb-3">
+                  <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink dark:text-[#FAFAFA] mb-3">
                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
                      <span>[ 02 // CASE STUDIES ]</span>
                   </div>
-                  <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink" style="text-wrap: balance;" data-i18n="projects_heading">
+                  <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink dark:text-[#FAFAFA]" style="text-wrap: balance;" data-i18n="projects_heading">
                      Proyek Pilihan
                   </h2>
-                  <p class="mt-3 text-base text-slateMuted" data-i18n="projects_subtitle">
+                  <p class="mt-3 text-base text-slateMuted dark:text-[#A1A1AA]" data-i18n="projects_subtitle">
                      Cerita nyata bagaimana sistem yang saya bangun menyelesaikan pekerjaan manual dan menghemat waktu tim.
                   </p>
                </div>
 
                <!-- Action Toolbar: 4px Hard-Offset CTA + 2px Carousel Arrows -->
                <div class="flex flex-wrap items-center gap-3 shrink-0">
-                  <button type="button" onclick="openApiModal('bpr')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-ink text-white border-[1.5px] border-ink text-xs font-semibold shadow-[4px_4px_0px_0px_#71717A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#71717A] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
-                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-hidden="true"></span>
+                  <button type="button" onclick="openApiModal('bpr')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] border-[1.5px] border-ink dark:border-[#FAFAFA] text-xs font-semibold shadow-[4px_4px_0px_0px_#71717A] dark:shadow-[4px_4px_0px_0px_#52525B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#71717A] dark:hover:shadow-[2px_2px_0px_0px_#52525B] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 dark:bg-emerald-500" aria-hidden="true"></span>
                      <span data-i18n="btn_live_api">Demo Sistem</span>
                   </button>
 
                   <div class="flex items-center gap-2">
-                     <button type="button" id="carousel-prev" onclick="scrollProjects(-1)" aria-label="Proyek sebelumnya" class="w-10 h-10 rounded-full border-[1.5px] border-ink bg-white shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-ink flex items-center justify-center transition-all duration-150 disabled:opacity-40">
+                     <button type="button" id="carousel-prev" onclick="scrollProjects(-1)" aria-label="Proyek sebelumnya" class="w-10 h-10 rounded-full border-[1.5px] border-ink dark:border-zinc-700 bg-white dark:bg-[#18181B] shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-ink dark:text-[#FAFAFA] flex items-center justify-center transition-all duration-150 disabled:opacity-40">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
                         </svg>
                      </button>
-                     <button type="button" id="carousel-next" onclick="scrollProjects(1)" aria-label="Proyek berikutnya" class="w-10 h-10 rounded-full border-[1.5px] border-ink bg-white shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-ink flex items-center justify-center transition-all duration-150 disabled:opacity-40">
+                     <button type="button" id="carousel-next" onclick="scrollProjects(1)" aria-label="Proyek berikutnya" class="w-10 h-10 rounded-full border-[1.5px] border-ink dark:border-zinc-700 bg-white dark:bg-[#18181B] shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-ink dark:text-[#FAFAFA] flex items-center justify-center transition-all duration-150 disabled:opacity-40">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                         </svg>
@@ -544,62 +597,62 @@
 
             <!-- Category Filter Segmented Bar -->
             <div class="reveal mb-8 flex items-center justify-between flex-wrap gap-4">
-               <div class="inline-flex items-center gap-1 p-1 rounded-full bg-surface border-[1.5px] border-ink" role="tablist" aria-label="Filter proyek berdasarkan kategori">
-                  <button type="button" role="tab" aria-selected="true" data-filter="all" onclick="filterProjects('all', this)" class="project-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 bg-ink text-white shadow-sm whitespace-nowrap shrink-0" data-i18n="tab_all">Semua</button>
-                  <button type="button" role="tab" aria-selected="false" data-filter="automation" onclick="filterProjects('automation', this)" class="project-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 text-zinc-600 hover:text-ink whitespace-nowrap shrink-0" data-i18n="tab_automation">Otomasi</button>
-                  <button type="button" role="tab" aria-selected="false" data-filter="api" onclick="filterProjects('api', this)" class="project-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 text-zinc-600 hover:text-ink whitespace-nowrap shrink-0" data-i18n="tab_api">Web &amp; Pembayaran</button>
+               <div class="inline-flex items-center gap-1 p-1 rounded-full bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 transition-colors duration-300" role="tablist" aria-label="Filter proyek berdasarkan kategori">
+                  <button type="button" role="tab" aria-selected="true" data-filter="all" onclick="filterProjects('all', this)" class="project-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-sm whitespace-nowrap shrink-0" data-i18n="tab_all">Semua</button>
+                  <button type="button" role="tab" aria-selected="false" data-filter="automation" onclick="filterProjects('automation', this)" class="project-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 text-zinc-600 hover:text-ink dark:text-zinc-400 dark:hover:text-[#FAFAFA] whitespace-nowrap shrink-0" data-i18n="tab_automation">Otomasi</button>
+                  <button type="button" role="tab" aria-selected="false" data-filter="api" onclick="filterProjects('api', this)" class="project-tab px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 text-zinc-600 hover:text-ink dark:text-zinc-400 dark:hover:text-[#FAFAFA] whitespace-nowrap shrink-0" data-i18n="tab_api">Web &amp; Pembayaran</button>
                </div>
 
-               <p class="font-mono text-xs text-zinc-500 hidden sm:block" data-i18n="carousel_hint">Geser atau seret kartu ke samping →</p>
+               <p class="font-mono text-xs text-zinc-500 dark:text-zinc-400 hidden sm:block" data-i18n="carousel_hint">Geser atau seret kartu ke samping →</p>
             </div>
 
             <!-- Horizontal Snap-Scrolling Project Carousel -->
             <div id="projects-carousel" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pb-4 pt-1 pr-2 cursor-grab active:cursor-grabbing select-none">
 
                <!-- Project 1: BPR Syariah Mustaqim -->
-               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas border-[1.5px] border-ink p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple" data-category="automation">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple" data-category="automation">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
-                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 mb-3 pr-5">
-                        <span class="font-semibold text-emerald-700">[ PRJ-01 ]</span>
+                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 dark:text-zinc-400 mb-3 pr-5">
+                        <span class="font-semibold text-emerald-700 dark:text-emerald-400">[ PRJ-01 ]</span>
                         <span aria-hidden="true">·</span>
                         <span data-i18n="proj1_cat">Otomasi Perbankan</span>
                      </div>
 
-                     <h3 class="text-xl font-bold tracking-tight text-ink leading-snug mb-5" data-i18n="proj1_title">
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] leading-snug mb-5" data-i18n="proj1_title">
                         Monitoring Kredit BPR &amp; Pengingat WhatsApp
                      </h3>
 
                      <!-- 3-Line Problem -> Solution -> Impact -->
                      <dl class="space-y-3 text-sm">
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj1_problem">Staf harus mengirim pengingat cicilan satu per satu secara manual dan sering terlewat.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj1_problem">Staf harus mengirim pengingat cicilan satu per satu secara manual dan sering terlewat.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj1_solution">Membuat aplikasi pencatatan nasabah dengan pengingat WhatsApp otomatis sebelum tanggal jatuh tempo.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj1_solution">Membuat aplikasi pencatatan nasabah dengan pengingat WhatsApp otomatis sebelum tanggal jatuh tempo.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
-                           <dd class="font-semibold text-ink mt-0.5 leading-snug" data-i18n="proj1_impact">Tagihan terkirim otomatis 100% tepat waktu dan meringankan kerja staf harian.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
+                           <dd class="font-semibold text-ink dark:text-[#FAFAFA] mt-0.5 leading-snug" data-i18n="proj1_impact">Tagihan terkirim otomatis 100% tepat waktu dan meringankan kerja staf harian.</dd>
                         </div>
                      </dl>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 space-y-4">
-                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink">
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">PHP</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">MySQL</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">Node.js Cron</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">WhatsApp API</span>
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 space-y-4">
+                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink dark:text-zinc-200">
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">PHP</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">MySQL</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">Node.js Cron</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">WhatsApp API</span>
                      </div>
                      <div class="flex items-center justify-between gap-3">
-                        <a href="https://github.com/UmamSitorus/Sistem-Monitoring-BPR-dan-Reminder-Cicilan-Otomatis-Menggunak-Cron-Job-" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink hover:underline whitespace-nowrap">
+                        <a href="https://github.com/UmamSitorus/Sistem-Monitoring-BPR-dan-Reminder-Cicilan-Otomatis-Menggunak-Cron-Job-" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline whitespace-nowrap">
                            <span data-i18n="link_github">Lihat Kode di GitHub</span>
                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                         </a>
-                        <button type="button" onclick="openApiModal('bpr')" class="px-3 py-1.5 rounded-full bg-white border-[1.5px] border-ink shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-xs font-semibold text-ink transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
+                        <button type="button" onclick="openApiModal('bpr')" class="px-3 py-1.5 rounded-full bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-xs font-semibold text-ink dark:text-[#FAFAFA] transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
                            Coba Demo
                         </button>
                      </div>
@@ -607,47 +660,47 @@
                </article>
 
                <!-- Project 2: Sistem Verifikasi Pembayaran Otomatis -->
-               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas border-[1.5px] border-ink p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple" data-category="api">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple" data-category="api">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
-                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 mb-3 pr-5">
-                        <span class="font-semibold text-emerald-700">[ PRJ-02 ]</span>
+                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 dark:text-zinc-400 mb-3 pr-5">
+                        <span class="font-semibold text-emerald-700 dark:text-emerald-400">[ PRJ-02 ]</span>
                         <span aria-hidden="true">·</span>
                         <span data-i18n="proj2_cat">Sistem Pembayaran</span>
                      </div>
 
-                     <h3 class="text-xl font-bold tracking-tight text-ink leading-snug mb-5" data-i18n="proj2_title">
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] leading-snug mb-5" data-i18n="proj2_title">
                         Sistem Verifikasi Pembayaran Otomatis
                      </h3>
 
                      <dl class="space-y-3 text-sm">
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj2_problem">Admin harus mengecek bukti transfer secara manual sehingga konfirmasi pesanan tertunda berjam-jam.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj2_problem">Admin harus mengecek bukti transfer secara manual sehingga konfirmasi pesanan tertunda berjam-jam.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj2_solution">Membangun penerima notifikasi pembayaran otomatis yang langsung memvalidasi transaksi secara aman.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj2_solution">Membangun penerima notifikasi pembayaran otomatis yang langsung memvalidasi transaksi secara aman.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
-                           <dd class="font-semibold text-ink mt-0.5 leading-snug" data-i18n="proj2_impact">Pembayaran terkonfirmasi dalam hitungan detik dan bebas duplikasi data.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
+                           <dd class="font-semibold text-ink dark:text-[#FAFAFA] mt-0.5 leading-snug" data-i18n="proj2_impact">Pembayaran terkonfirmasi dalam hitungan detik dan bebas duplikasi data.</dd>
                         </div>
                      </dl>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 space-y-4">
-                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink">
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">Laravel</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">MySQL Transactions</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">Webhooks</span>
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 space-y-4">
+                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink dark:text-zinc-200">
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">Laravel</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">MySQL Transactions</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">Webhooks</span>
                      </div>
                      <div class="flex items-center justify-between gap-3">
-                        <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink hover:underline whitespace-nowrap">
+                        <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline whitespace-nowrap">
                            <span data-i18n="link_github">Lihat Kode di GitHub</span>
                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                         </a>
-                        <button type="button" onclick="openApiModal('webhook')" class="px-3 py-1.5 rounded-full bg-white border-[1.5px] border-ink shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-xs font-semibold text-ink transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
+                        <button type="button" onclick="openApiModal('webhook')" class="px-3 py-1.5 rounded-full bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-xs font-semibold text-ink dark:text-[#FAFAFA] transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
                            Coba Demo
                         </button>
                      </div>
@@ -655,47 +708,47 @@
                </article>
 
                <!-- Project 3: Rekap Penjualan & Stok Antar Cabang -->
-               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas border-[1.5px] border-ink p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple" data-category="automation">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple" data-category="automation">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
-                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 mb-3 pr-5">
-                        <span class="font-semibold text-emerald-700">[ PRJ-03 ]</span>
+                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 dark:text-zinc-400 mb-3 pr-5">
+                        <span class="font-semibold text-emerald-700 dark:text-emerald-400">[ PRJ-03 ]</span>
                         <span aria-hidden="true">·</span>
                         <span data-i18n="proj3_cat">Rekap Data Otomatis</span>
                      </div>
 
-                     <h3 class="text-xl font-bold tracking-tight text-ink leading-snug mb-5" data-i18n="proj3_title">
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] leading-snug mb-5" data-i18n="proj3_title">
                         Rekap Penjualan &amp; Stok Antar Cabang
                      </h3>
 
                      <dl class="space-y-3 text-sm">
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj3_problem">Tim admin menghabiskan 3 jam setiap malam untuk menggabungkan laporan dari 3 cabang secara manual.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj3_problem">Tim admin menghabiskan 3 jam setiap malam untuk menggabungkan laporan dari 3 cabang secara manual.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj3_solution">Membuat sistem terjadwal yang otomatis menarik, merapikan, dan menggabungkan laporan setiap malam.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj3_solution">Membuat sistem terjadwal yang otomatis menarik, merapikan, dan menggabungkan laporan setiap malam.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
-                           <dd class="font-semibold text-ink mt-0.5 leading-snug" data-i18n="proj3_impact">Hemat 21 jam kerja per minggu dengan hasil rekap data yang akurat.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
+                           <dd class="font-semibold text-ink dark:text-[#FAFAFA] mt-0.5 leading-snug" data-i18n="proj3_impact">Hemat 21 jam kerja per minggu dengan hasil rekap data yang akurat.</dd>
                         </div>
                      </dl>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 space-y-4">
-                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink">
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">PHP CLI</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">Linux Cron</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">REST API</span>
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 space-y-4">
+                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink dark:text-zinc-200">
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">PHP CLI</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">Linux Cron</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">REST API</span>
                      </div>
                      <div class="flex items-center justify-between gap-3">
-                        <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink hover:underline whitespace-nowrap">
+                        <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline whitespace-nowrap">
                            <span data-i18n="link_github">Lihat Kode di GitHub</span>
                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                         </a>
-                        <button type="button" onclick="openApiModal('cron')" class="px-3 py-1.5 rounded-full bg-white border-[1.5px] border-ink shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-xs font-semibold text-ink transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
+                        <button type="button" onclick="openApiModal('cron')" class="px-3 py-1.5 rounded-full bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-xs font-semibold text-ink dark:text-[#FAFAFA] transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
                            Coba Demo
                         </button>
                      </div>
@@ -703,47 +756,47 @@
                </article>
 
                <!-- Project 4: Sistem Sinkronisasi Stok Toko Online -->
-               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas border-[1.5px] border-ink p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple" data-category="api">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="project-card relative snap-start shrink-0 w-[86vw] sm:w-[400px] lg:w-[420px] rounded-3xl bg-canvas dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 p-7 flex flex-col justify-between shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple" data-category="api">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
-                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 mb-3 pr-5">
-                        <span class="font-semibold text-emerald-700">[ PRJ-04 ]</span>
+                     <div class="flex items-center gap-2 font-mono text-[11px] text-zinc-500 dark:text-zinc-400 mb-3 pr-5">
+                        <span class="font-semibold text-emerald-700 dark:text-emerald-400">[ PRJ-04 ]</span>
                         <span aria-hidden="true">·</span>
                         <span data-i18n="proj4_cat">Toko Online</span>
                      </div>
 
-                     <h3 class="text-xl font-bold tracking-tight text-ink leading-snug mb-5" data-i18n="proj4_title">
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] leading-snug mb-5" data-i18n="proj4_title">
                         Sistem Sinkronisasi Stok Toko Online
                      </h3>
 
                      <dl class="space-y-3 text-sm">
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj4_problem">Pembelian bersamaan di beberapa toko sering membuat jumlah stok tidak sinkron dan salah kirim.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_problem">Masalah</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj4_problem">Pembelian bersamaan di beberapa toko sering membuat jumlah stok tidak sinkron dan salah kirim.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
-                           <dd class="text-slateMuted mt-0.5 leading-snug" data-i18n="proj4_solution">Membangun pusat kontrol stok yang otomatis mengunci dan memperbarui sisa barang di semua toko.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" data-i18n="label_solution">Solusi</dt>
+                           <dd class="text-slateMuted dark:text-[#A1A1AA] mt-0.5 leading-snug" data-i18n="proj4_solution">Membangun pusat kontrol stok yang otomatis mengunci dan memperbarui sisa barang di semua toko.</dd>
                         </div>
                         <div>
-                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
-                           <dd class="font-semibold text-ink mt-0.5 leading-snug" data-i18n="proj4_impact">Bebas error salah stok dan proses belanja pelanggan jauh lebih lancar.</dd>
+                           <dt class="font-mono text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide" data-i18n="label_impact">Hasil</dt>
+                           <dd class="font-semibold text-ink dark:text-[#FAFAFA] mt-0.5 leading-snug" data-i18n="proj4_impact">Bebas error salah stok dan proses belanja pelanggan jauh lebih lancar.</dd>
                         </div>
                      </dl>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 space-y-4">
-                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink">
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">Laravel</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">Queue Jobs</span>
-                        <span class="px-2 py-0.5 rounded bg-white border border-zinc-300">MySQL Indexing</span>
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 space-y-4">
+                     <div class="flex flex-wrap gap-1.5 font-mono text-[11px] text-ink dark:text-zinc-200">
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">Laravel</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">Queue Jobs</span>
+                        <span class="px-2 py-0.5 rounded bg-white dark:bg-[#121215] border border-zinc-300 dark:border-zinc-700">MySQL Indexing</span>
                      </div>
                      <div class="flex items-center justify-between gap-3">
-                        <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink hover:underline whitespace-nowrap">
+                        <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline whitespace-nowrap">
                            <span data-i18n="link_github">Lihat Kode di GitHub</span>
                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                         </a>
-                        <button type="button" onclick="openApiModal('inventory')" class="px-3 py-1.5 rounded-full bg-white border-[1.5px] border-ink shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-xs font-semibold text-ink transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
+                        <button type="button" onclick="openApiModal('inventory')" class="px-3 py-1.5 rounded-full bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-xs font-semibold text-ink dark:text-[#FAFAFA] transition-all duration-150 whitespace-nowrap" data-i18n="btn_test_endpoint">
                            Coba Demo
                         </button>
                      </div>
@@ -755,173 +808,173 @@
       </section>
 
       <!--==================== CREDENTIALS & EDUCATION (2x2 NOTION GRID) ====================-->
-      <section id="credentials" class="py-20 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <section id="credentials" class="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
          <div class="max-w-6xl mx-auto">
             <div class="reveal max-w-2xl mb-12">
-               <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink mb-3">
+               <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink dark:text-[#FAFAFA] mb-3">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
                   <span>[ 03 // CREDENTIALS ]</span>
                </div>
-               <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink" style="text-wrap: balance;" data-i18n="cred_heading">
+               <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink dark:text-[#FAFAFA]" style="text-wrap: balance;" data-i18n="cred_heading">
                   Sertifikat &amp; Pendidikan
                </h2>
-               <p class="mt-3 text-base text-slateMuted" data-i18n="cred_subtitle">
+               <p class="mt-3 text-base text-slateMuted dark:text-[#A1A1AA]" data-i18n="cred_subtitle">
                   Sertifikasi resmi di bidang AI, pengembangan web, dan olah data beserta latar belakang pendidikan IT.
                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                <!-- Credential 1: Google AI Specialization (8x Verified) -->
-               <article class="reveal relative rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple flex flex-col justify-between">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="reveal relative rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple flex flex-col justify-between">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
                      <div class="flex items-center justify-between gap-4 mb-5 pr-5">
-                        <div class="w-11 h-11 rounded-2xl bg-surface border-[1.5px] border-ink flex items-center justify-center text-ink">
+                        <div class="w-11 h-11 rounded-2xl bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 flex items-center justify-center text-ink dark:text-[#FAFAFA]">
                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                               <path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/>
                            </svg>
                         </div>
-                        <span class="font-mono text-xs tabular-nums text-emerald-700 font-semibold">[ ID: 8MYTMAQ2PMI2 ]</span>
+                        <span class="font-mono text-xs tabular-nums text-emerald-700 dark:text-emerald-400 font-semibold">[ ID: 8MYTMAQ2PMI2 ]</span>
                      </div>
 
-                     <p class="font-mono text-[11px] font-medium text-zinc-500 mb-1">Google · Coursera</p>
-                     <h3 class="text-xl font-bold tracking-tight text-ink mb-2" data-i18n="cred1_title">
+                     <p class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">Google · Coursera</p>
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] mb-2" data-i18n="cred1_title">
                         Google AI Specialization (8x Terverifikasi)
                      </h3>
-                     <p class="text-sm text-slateMuted leading-relaxed" data-i18n="cred1_desc">
+                     <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="cred1_desc">
                         Sertifikasi resmi Google untuk memakai AI dalam riset, olah data, dan pembuatan sistem otomatis.
                      </p>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 flex flex-wrap items-center justify-between gap-3">
-                     <a href="https://www.coursera.org/account/accomplishments/specialization/8MYTMAQ2PMI2" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink hover:underline">
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-3">
+                     <a href="https://www.coursera.org/account/accomplishments/specialization/8MYTMAQ2PMI2" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline">
                         <span data-i18n="cred_verify">Lihat Sertifikat Asli</span>
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                      </a>
-                     <button type="button" onclick="toggleModulesList()" class="font-mono text-xs font-medium text-zinc-600 hover:text-ink underline-offset-4 hover:underline" data-i18n="cred_view_modules">
+                     <button type="button" onclick="toggleModulesList()" class="font-mono text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-ink dark:hover:text-[#FAFAFA] underline-offset-4 hover:underline" data-i18n="cred_view_modules">
                         Lihat 7 Modul
                      </button>
                   </div>
 
                   <!-- Expandable 7 Modules Drawer -->
-                  <div id="google-modules-drawer" class="hidden mt-4 pt-4 border-t border-zinc-200 space-y-2 text-xs">
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                  <div id="google-modules-drawer" class="hidden mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-2 text-xs">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>1. AI Fundamentals</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/768IE5RBXDRC" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">768IE5RBXDRC ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/768IE5RBXDRC" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">768IE5RBXDRC ↗</a>
                      </div>
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>2. AI for Brainstorming &amp; Planning</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/4XF3V6ZCEA85" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">4XF3V6ZCEA85 ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/4XF3V6ZCEA85" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">4XF3V6ZCEA85 ↗</a>
                      </div>
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>3. AI for Research &amp; Insights</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/RUFN9Z8PH3QN" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">RUFN9Z8PH3QN ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/RUFN9Z8PH3QN" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">RUFN9Z8PH3QN ↗</a>
                      </div>
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>4. AI for Writing &amp; Communicating</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/SRJPU1EPDIY6" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">SRJPU1EPDIY6 ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/SRJPU1EPDIY6" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">SRJPU1EPDIY6 ↗</a>
                      </div>
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>5. AI for Content Creation</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/B3DJ7AJ5FLK3" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">B3DJ7AJ5FLK3 ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/B3DJ7AJ5FLK3" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">B3DJ7AJ5FLK3 ↗</a>
                      </div>
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>6. AI for Data Analysis</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/WB7S9W8HPY4D" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">WB7S9W8HPY4D ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/WB7S9W8HPY4D" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">WB7S9W8HPY4D ↗</a>
                      </div>
-                     <div class="flex items-center justify-between gap-2 text-zinc-600">
+                     <div class="flex items-center justify-between gap-2 text-zinc-600 dark:text-zinc-300">
                         <span>7. AI for App Building</span>
-                        <a href="https://www.coursera.org/account/accomplishments/verify/D0DUKQXSHQSQ" target="_blank" rel="noopener noreferrer" class="font-mono text-ink hover:underline">D0DUKQXSHQSQ ↗</a>
+                        <a href="https://www.coursera.org/account/accomplishments/verify/D0DUKQXSHQSQ" target="_blank" rel="noopener noreferrer" class="font-mono text-ink dark:text-[#FAFAFA] hover:underline">D0DUKQXSHQSQ ↗</a>
                      </div>
                   </div>
                </article>
 
                <!-- Credential 2: Komdigi Intermediate Web Developer -->
-               <article class="reveal relative rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple flex flex-col justify-between">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="reveal relative rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple flex flex-col justify-between">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
                      <div class="flex items-center justify-between gap-4 mb-5 pr-5">
-                        <div class="w-11 h-11 rounded-2xl bg-surface border-[1.5px] border-ink flex items-center justify-center text-ink">
+                        <div class="w-11 h-11 rounded-2xl bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 flex items-center justify-center text-ink dark:text-[#FAFAFA]">
                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                            </svg>
                         </div>
-                        <span class="font-mono text-xs text-zinc-600 font-medium">[ SKKNI ]</span>
+                        <span class="font-mono text-xs text-zinc-600 dark:text-zinc-400 font-medium">[ SKKNI ]</span>
                      </div>
 
-                     <p class="font-mono text-[11px] font-medium text-zinc-500 mb-1">Komdigi · Digital Talent Scholarship</p>
-                     <h3 class="text-xl font-bold tracking-tight text-ink mb-2" data-i18n="cred2_title">
+                     <p class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">Komdigi · Digital Talent Scholarship</p>
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] mb-2" data-i18n="cred2_title">
                         Komdigi Intermediate Web Developer
                      </h3>
-                     <p class="text-sm text-slateMuted leading-relaxed" data-i18n="cred2_desc">
+                     <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="cred2_desc">
                         Sertifikasi kompetensi nasional untuk membangun website, mengelola database, dan sistem web yang aman.
                      </p>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 flex items-center justify-between">
-                     <span class="font-mono text-[11px] font-medium text-zinc-500" data-i18n="cred2_meta">Pembuatan Web · Pengelolaan Database</span>
-                     <button type="button" onclick="openCvModal()" class="text-xs font-semibold text-ink hover:underline" data-i18n="cred_see_cv">
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                     <span class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400" data-i18n="cred2_meta">Pembuatan Web · Pengelolaan Database</span>
+                     <button type="button" onclick="openCvModal()" class="text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline" data-i18n="cred_see_cv">
                         Lihat di CV ↗
                      </button>
                   </div>
                </article>
 
                <!-- Credential 3: Komdigi Associate Data Science + Python -->
-               <article class="reveal relative rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple flex flex-col justify-between">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="reveal relative rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple flex flex-col justify-between">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
                      <div class="flex items-center justify-between gap-4 mb-5 pr-5">
-                        <div class="w-11 h-11 rounded-2xl bg-surface border-[1.5px] border-ink flex items-center justify-center text-ink">
+                        <div class="w-11 h-11 rounded-2xl bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 flex items-center justify-center text-ink dark:text-[#FAFAFA]">
                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                            </svg>
                         </div>
-                        <span class="font-mono text-xs text-zinc-600 font-medium">[ PYTHON ]</span>
+                        <span class="font-mono text-xs text-zinc-600 dark:text-zinc-400 font-medium">[ PYTHON ]</span>
                      </div>
 
-                     <p class="font-mono text-[11px] font-medium text-zinc-500 mb-1">Komdigi · Digital Talent Scholarship</p>
-                     <h3 class="text-xl font-bold tracking-tight text-ink mb-2" data-i18n="cred3_title">
+                     <p class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">Komdigi · Digital Talent Scholarship</p>
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] mb-2" data-i18n="cred3_title">
                         Komdigi Associate Data Science + Python
                      </h3>
-                     <p class="text-sm text-slateMuted leading-relaxed" data-i18n="cred3_desc">
+                     <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="cred3_desc">
                         Sertifikasi keahlian mengolah data, menyusun laporan terstruktur, dan analisis menggunakan bahasa Python.
                      </p>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 flex items-center justify-between">
-                     <span class="font-mono text-[11px] font-medium text-zinc-500" data-i18n="cred3_meta">Python · Olah Data · Laporan</span>
-                     <button type="button" onclick="openCvModal()" class="text-xs font-semibold text-ink hover:underline" data-i18n="cred_see_cv">
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                     <span class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400" data-i18n="cred3_meta">Python · Olah Data · Laporan</span>
+                     <button type="button" onclick="openCvModal()" class="text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline" data-i18n="cred_see_cv">
                         Lihat di CV ↗
                      </button>
                   </div>
                </article>
 
                <!-- Credential 4: Sarjana Teknologi Informasi -->
-               <article class="reveal relative rounded-3xl bg-white border-[1.5px] border-ink p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] transition-all duration-150 ease-apple flex flex-col justify-between">
-                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 select-none">+</span>
+               <article class="reveal relative rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-800 p-7 sm:p-8 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] transition-all duration-150 ease-apple flex flex-col justify-between">
+                  <span aria-hidden="true" class="absolute top-6 right-6 font-mono text-xs text-zinc-400 dark:text-zinc-600 select-none">+</span>
                   <div>
                      <div class="flex items-center justify-between gap-4 mb-5 pr-5">
-                        <div class="w-11 h-11 rounded-2xl bg-surface border-[1.5px] border-ink flex items-center justify-center text-ink">
+                        <div class="w-11 h-11 rounded-2xl bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 flex items-center justify-center text-ink dark:text-[#FAFAFA]">
                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
                               <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                            </svg>
                         </div>
-                        <span class="font-mono text-xs text-zinc-600 font-medium" data-i18n="cred4_badge">[ LULUSAN S1 ]</span>
+                        <span class="font-mono text-xs text-zinc-600 dark:text-zinc-400 font-medium" data-i18n="cred4_badge">[ LULUSAN S1 ]</span>
                      </div>
 
-                     <p class="font-mono text-[11px] font-medium text-zinc-500 mb-1">Universitas Teuku Umar</p>
-                     <h3 class="text-xl font-bold tracking-tight text-ink mb-2" data-i18n="cred4_title">
+                     <p class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">Universitas Teuku Umar</p>
+                     <h3 class="text-xl font-bold tracking-tight text-ink dark:text-[#FAFAFA] mb-2" data-i18n="cred4_title">
                         Sarjana Teknologi Informasi (S1)
                      </h3>
-                     <p class="text-sm text-slateMuted leading-relaxed" data-i18n="cred4_desc">
+                     <p class="text-sm text-slateMuted dark:text-[#A1A1AA] leading-relaxed" data-i18n="cred4_desc">
                         Lulusan Universitas Teuku Umar dengan bekal kuat di bidang pemrograman, database, dan jaringan komputer.
                      </p>
                   </div>
 
-                  <div class="pt-5 mt-6 border-t border-zinc-200 flex items-center justify-between">
-                     <span class="font-mono text-[11px] font-medium text-zinc-500" data-i18n="cred4_meta">S1 Teknologi Informasi · Aceh</span>
-                     <button type="button" onclick="openCvModal()" class="text-xs font-semibold text-ink hover:underline" data-i18n="cred_see_cv">
+                  <div class="pt-5 mt-6 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                     <span class="font-mono text-[11px] font-medium text-zinc-500 dark:text-zinc-400" data-i18n="cred4_meta">S1 Teknologi Informasi · Aceh</span>
+                     <button type="button" onclick="openCvModal()" class="text-xs font-semibold text-ink dark:text-[#FAFAFA] hover:underline" data-i18n="cred_see_cv">
                         Lihat di CV ↗
                      </button>
                   </div>
@@ -931,48 +984,48 @@
       </section>
 
       <!--==================== MINIMALIST CTA & FOOTER (DOT-GRID BLUEPRINT) ====================-->
-      <footer id="contact" class="py-20 px-4 sm:px-6 lg:px-8 bg-[radial-gradient(#e4e4e7_1px,transparent_1px)] [background-size:20px_20px] border-t border-hairline">
+      <footer id="contact" class="py-20 px-4 sm:px-6 lg:px-8 dot-grid-bg border-t border-hairline dark:border-zinc-800 transition-colors duration-300">
          <div class="max-w-4xl mx-auto">
-            <div class="reveal relative rounded-[1.75rem] bg-white border-[1.5px] border-ink p-10 sm:p-14 text-center shadow-[4px_4px_0px_0px_#18181B]">
+            <div class="reveal relative rounded-[1.75rem] bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 p-10 sm:p-14 text-center shadow-[4px_4px_0px_0px_#18181B] dark:shadow-[4px_4px_0px_0px_#3F3F46] transition-colors duration-300">
                <!-- Corner Registration Marks -->
-               <span aria-hidden="true" class="absolute top-4 left-5 font-mono text-xs font-bold text-zinc-400 select-none">+</span>
-               <span aria-hidden="true" class="absolute top-4 right-5 font-mono text-xs font-bold text-zinc-400 select-none">+</span>
-               <span aria-hidden="true" class="absolute bottom-4 left-5 font-mono text-xs font-bold text-zinc-400 select-none">+</span>
-               <span aria-hidden="true" class="absolute bottom-4 right-5 font-mono text-xs font-bold text-zinc-400 select-none">+</span>
+               <span aria-hidden="true" class="absolute top-4 left-5 font-mono text-xs font-bold text-zinc-400 dark:text-zinc-600 select-none">+</span>
+               <span aria-hidden="true" class="absolute top-4 right-5 font-mono text-xs font-bold text-zinc-400 dark:text-zinc-600 select-none">+</span>
+               <span aria-hidden="true" class="absolute bottom-4 left-5 font-mono text-xs font-bold text-zinc-400 dark:text-zinc-600 select-none">+</span>
+               <span aria-hidden="true" class="absolute bottom-4 right-5 font-mono text-xs font-bold text-zinc-400 dark:text-zinc-600 select-none">+</span>
 
-               <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink mb-4">
+               <div class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-ink dark:text-[#FAFAFA] mb-4">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
                   <span>[ 04 // CONNECT ]</span>
                </div>
-               <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink leading-tight max-w-xl mx-auto" style="text-wrap: balance;" data-i18n="footer_heading">
+               <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink dark:text-[#FAFAFA] leading-tight max-w-xl mx-auto" style="text-wrap: balance;" data-i18n="footer_heading">
                   Mari diskusikan kebutuhan sistem Anda.
                </h2>
-               <p class="mt-4 text-base text-slateMuted max-w-lg mx-auto" data-i18n="footer_desc">
+               <p class="mt-4 text-base text-slateMuted dark:text-[#A1A1AA] max-w-lg mx-auto" data-i18n="footer_desc">
                   Butuh bantuan membangun sistem web, memangkas pekerjaan manual, atau mengintegrasikan AI? Silakan hubungi saya langsung.
                </p>
 
                <!-- Direct Tactile Contact Buttons (4px Hard-Offset) -->
                <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-                  <a href="mailto:umamisuib@gmail.com" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink text-white border-[1.5px] border-ink text-sm font-semibold shadow-[4px_4px_0px_0px_#71717A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#71717A] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                  <a href="mailto:umamisuib@gmail.com" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] border-[1.5px] border-ink dark:border-[#FAFAFA] text-sm font-semibold shadow-[4px_4px_0px_0px_#71717A] dark:shadow-[4px_4px_0px_0px_#52525B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#71717A] dark:hover:shadow-[2px_2px_0px_0px_#52525B] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                      </svg>
                      <span data-i18n="footer_btn_email">Hubungi Saya</span>
                   </a>
 
-                  <a href="https://wa.me/6285658153551" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-[1.5px] border-ink text-ink text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                  <a href="https://wa.me/6285658153551" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 text-ink dark:text-[#FAFAFA] text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] dark:shadow-[4px_4px_0px_0px_#3F3F46] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] dark:hover:shadow-[2px_2px_0px_0px_#3F3F46] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                      </svg>
                      <span data-i18n="footer_btn_wa">Chat WhatsApp</span>
                   </a>
 
-                  <a href="https://www.linkedin.com/in/suib-umami" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-[1.5px] border-ink text-ink text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                  <a href="https://www.linkedin.com/in/suib-umami" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 text-ink dark:text-[#FAFAFA] text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] dark:shadow-[4px_4px_0px_0px_#3F3F46] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] dark:hover:shadow-[2px_2px_0px_0px_#3F3F46] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
                      <span>LinkedIn</span>
                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                   </a>
 
-                  <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-[1.5px] border-ink text-ink text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
+                  <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 text-ink dark:text-[#FAFAFA] text-sm font-semibold shadow-[4px_4px_0px_0px_#18181B] dark:shadow-[4px_4px_0px_0px_#3F3F46] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#18181B] dark:hover:shadow-[2px_2px_0px_0px_#3F3F46] transition-all duration-150 ease-apple whitespace-nowrap shrink-0">
                      <span>GitHub</span>
                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M7 7h10v10"/></svg>
                   </a>
@@ -980,11 +1033,11 @@
             </div>
 
             <!-- Quiet Copyright Row -->
-            <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-zinc-500 px-2">
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-zinc-500 dark:text-zinc-400 px-2">
                <p>© 2026 Suib Umami Sitorus · <span data-i18n="footer_rights">Hak cipta dilindungi.</span></p>
                <div class="flex items-center gap-5">
-                  <button type="button" onclick="openApiModal('gemini_ai')" class="hover:text-ink transition-colors" data-i18n="footer_api_link">Demo Sistem</button>
-                  <button type="button" onclick="openCvModal()" class="hover:text-ink transition-colors" data-i18n="footer_cv_link">Lihat CV</button>
+                  <button type="button" onclick="openApiModal('gemini_ai')" class="hover:text-ink dark:hover:text-[#FAFAFA] transition-colors" data-i18n="footer_api_link">Demo Sistem</button>
+                  <button type="button" onclick="openCvModal()" class="hover:text-ink dark:hover:text-[#FAFAFA] transition-colors" data-i18n="footer_cv_link">Lihat CV</button>
                </div>
             </div>
          </div>
@@ -992,15 +1045,15 @@
    </main>
 
    <!--==================== MODAL 1: LIVE API DEMO SIMULATOR ====================-->
-   <div id="api-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="api-modal-title">
-      <div class="modal-panel w-full max-w-2xl rounded-3xl bg-white border-[1.5px] border-ink shadow-[6px_6px_0px_0px_#18181B] overflow-hidden flex flex-col max-h-[90vh]">
+   <div id="api-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/40 dark:bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="api-modal-title">
+      <div class="modal-panel w-full max-w-2xl rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[6px_6px_0px_0px_#18181B] dark:shadow-[6px_6px_0px_0px_#3F3F46] overflow-hidden flex flex-col max-h-[90vh] transition-colors duration-300">
          <!-- Modal Header -->
-         <div class="px-6 py-5 border-b border-zinc-200 flex items-center justify-between gap-4">
+         <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-4">
             <div>
-               <h3 id="api-modal-title" class="text-lg font-bold text-ink tracking-tight" data-i18n="api_modal_title">Demo Cara Kerja Sistem</h3>
-               <p class="text-xs text-slateMuted mt-0.5" data-i18n="api_modal_sub">Coba simulasi pengiriman pesan otomatis, cek pembayaran, dan rekap data di sini.</p>
+               <h3 id="api-modal-title" class="text-lg font-bold text-ink dark:text-[#FAFAFA] tracking-tight" data-i18n="api_modal_title">Demo Cara Kerja Sistem</h3>
+               <p class="text-xs text-slateMuted dark:text-[#A1A1AA] mt-0.5" data-i18n="api_modal_sub">Coba simulasi pengiriman pesan otomatis, cek pembayaran, dan rekap data di sini.</p>
             </div>
-            <button type="button" onclick="closeApiModal()" aria-label="Tutup demo sistem" class="w-9 h-9 rounded-full bg-white border-[1.5px] border-ink shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-ink flex items-center justify-center transition-all duration-150">
+            <button type="button" onclick="closeApiModal()" aria-label="Tutup demo sistem" class="w-9 h-9 rounded-full bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-ink dark:text-[#FAFAFA] flex items-center justify-center transition-all duration-150">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
          </div>
@@ -1009,7 +1062,7 @@
          <div class="p-6 overflow-y-auto space-y-5">
             <!-- Endpoint Selector & Execute -->
             <div class="flex flex-col sm:flex-row gap-3">
-               <select id="api-endpoint-select" onchange="updateApiPreview()" aria-label="Pilih simulasi sistem" class="flex-1 px-4 py-2.5 rounded-xl bg-surface border-[1.5px] border-ink text-xs sm:text-sm font-medium text-ink focus:outline-none focus:ring-2 focus:ring-ink">
+               <select id="api-endpoint-select" onchange="updateApiPreview()" aria-label="Pilih simulasi sistem" class="flex-1 px-4 py-2.5 rounded-xl bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 text-xs sm:text-sm font-medium text-ink dark:text-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-ink dark:focus:ring-[#FAFAFA]">
                   <option value="bpr" data-i18n="api_opt_bpr">Otomasi Pengingat Cicilan WhatsApp (BPR)</option>
                   <option value="gemini_ai" data-i18n="api_opt_ai">Rangkuman Pesan Cerdas (Google AI)</option>
                   <option value="webhook" data-i18n="api_opt_webhook">Verifikasi Pembayaran Otomatis</option>
@@ -1017,22 +1070,22 @@
                   <option value="inventory" data-i18n="api_opt_inventory">Sinkronisasi Stok Toko Online</option>
                </select>
 
-               <button type="button" onclick="executeApiSimulation()" class="px-5 py-2.5 rounded-xl bg-ink text-white border-[1.5px] border-ink text-xs sm:text-sm font-semibold shadow-[3px_3px_0px_0px_#71717A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#71717A] transition-all duration-150 whitespace-nowrap shrink-0" data-i18n="api_send_btn">
+               <button type="button" onclick="executeApiSimulation()" class="px-5 py-2.5 rounded-xl bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] border-[1.5px] border-ink dark:border-[#FAFAFA] text-xs sm:text-sm font-semibold shadow-[3px_3px_0px_0px_#71717A] dark:shadow-[3px_3px_0px_0px_#52525B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#71717A] dark:hover:shadow-[1px_1px_0px_0px_#52525B] transition-all duration-150 whitespace-nowrap shrink-0" data-i18n="api_send_btn">
                   Jalankan Simulasi
                </button>
             </div>
 
             <!-- Request Payload -->
-            <div class="rounded-2xl bg-surface border-[1.5px] border-ink overflow-hidden">
-               <div class="px-4 py-2.5 border-b border-zinc-300 flex items-center justify-between text-xs">
-                  <span class="font-semibold text-zinc-700" data-i18n="api_req_label">Data yang Dikirim</span>
-                  <span id="api-method-badge" class="font-mono font-semibold text-ink">POST</span>
+            <div class="rounded-2xl bg-surface dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 overflow-hidden">
+               <div class="px-4 py-2.5 border-b border-zinc-300 dark:border-zinc-700 flex items-center justify-between text-xs">
+                  <span class="font-semibold text-zinc-700 dark:text-zinc-300" data-i18n="api_req_label">Data yang Dikirim</span>
+                  <span id="api-method-badge" class="font-mono font-semibold text-ink dark:text-[#FAFAFA]">POST</span>
                </div>
-               <pre id="api-request-code" class="p-4 text-xs font-mono text-zinc-800 overflow-x-auto leading-relaxed"></pre>
+               <pre id="api-request-code" class="p-4 text-xs font-mono text-zinc-800 dark:text-zinc-200 overflow-x-auto leading-relaxed"></pre>
             </div>
 
             <!-- Response Output -->
-            <div class="rounded-2xl bg-zinc-950 border-[1.5px] border-ink overflow-hidden text-zinc-100">
+            <div class="rounded-2xl bg-zinc-950 dark:bg-[#09090B] border-[1.5px] border-ink dark:border-zinc-700 overflow-hidden text-zinc-100">
                <div class="px-4 py-2.5 border-b border-zinc-800 flex items-center justify-between text-xs">
                   <span class="font-semibold text-zinc-400" data-i18n="api_res_label">Hasil Sistem</span>
                   <span id="api-latency-badge" class="font-mono tabular-nums text-emerald-400">200 OK · 24ms</span>
@@ -1044,79 +1097,79 @@
    </div>
 
    <!--==================== MODAL 2: INTERACTIVE CV / RESUME MODAL ====================-->
-   <div id="cv-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="cv-modal-title">
-      <div class="modal-panel w-full max-w-3xl rounded-3xl bg-white border-[1.5px] border-ink shadow-[6px_6px_0px_0px_#18181B] overflow-hidden flex flex-col max-h-[92vh]">
+   <div id="cv-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/40 dark:bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="cv-modal-title">
+      <div class="modal-panel w-full max-w-3xl rounded-3xl bg-white dark:bg-[#121215] border-[1.5px] border-ink dark:border-zinc-700 shadow-[6px_6px_0px_0px_#18181B] dark:shadow-[6px_6px_0px_0px_#3F3F46] overflow-hidden flex flex-col max-h-[92vh] transition-colors duration-300">
          <!-- Modal Header -->
-         <div class="px-6 py-4 border-b border-zinc-200 flex items-center justify-between gap-4 bg-white">
+         <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-4 bg-white dark:bg-[#121215] transition-colors duration-300">
             <div>
-               <h3 id="cv-modal-title" class="text-base font-bold text-ink" data-i18n="cv_modal_title">Daftar Riwayat Hidup (CV)</h3>
-               <p class="text-xs text-slateMuted">Suib Umami Sitorus · Spesialis Web &amp; Otomasi Sistem</p>
+               <h3 id="cv-modal-title" class="text-base font-bold text-ink dark:text-[#FAFAFA]" data-i18n="cv_modal_title">Daftar Riwayat Hidup (CV)</h3>
+               <p class="text-xs text-slateMuted dark:text-[#A1A1AA]">Suib Umami Sitorus · Spesialis Web &amp; Otomasi Sistem</p>
             </div>
             <div class="flex items-center gap-2.5">
-               <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ink text-white border-[1.5px] border-ink text-xs font-semibold shadow-[3px_3px_0px_0px_#71717A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#71717A] transition-all duration-150 whitespace-nowrap">
+               <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] border-[1.5px] border-ink dark:border-[#FAFAFA] text-xs font-semibold shadow-[3px_3px_0px_0px_#71717A] dark:shadow-[3px_3px_0px_0px_#52525B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#71717A] dark:hover:shadow-[1px_1px_0px_0px_#52525B] transition-all duration-150 whitespace-nowrap">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                   <span data-i18n="cv_print_btn">Cetak / Simpan PDF</span>
                </button>
-               <button type="button" onclick="closeCvModal()" aria-label="Tutup modal CV" class="w-9 h-9 rounded-full bg-white border-[1.5px] border-ink shadow-[2px_2px_0px_0px_#18181B] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] text-ink flex items-center justify-center transition-all duration-150">
+               <button type="button" onclick="closeCvModal()" aria-label="Tutup modal CV" class="w-9 h-9 rounded-full bg-white dark:bg-[#18181B] border-[1.5px] border-ink dark:border-zinc-700 shadow-[2px_2px_0px_0px_#18181B] dark:shadow-[2px_2px_0px_0px_#3F3F46] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_#18181B] dark:hover:shadow-[1px_1px_0px_0px_#3F3F46] text-ink dark:text-[#FAFAFA] flex items-center justify-center transition-all duration-150">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                </button>
             </div>
          </div>
 
          <!-- Printable Resume Sheet -->
-         <div id="cv-print-sheet" class="p-6 sm:p-10 overflow-y-auto space-y-6 text-sm text-zinc-700 bg-white">
-            <div class="pb-5 border-b border-hairline">
-               <h2 class="text-2xl font-extrabold tracking-tight text-ink">SUIB UMAMI SITORUS</h2>
-               <p class="text-sm font-medium text-slateMuted mt-1" data-i18n="cv_role">Sarjana Teknologi Informasi · Spesialis Web &amp; Otomasi Sistem</p>
-               <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-600">
-                  <a href="mailto:umamisuib@gmail.com" class="hover:text-ink underline">umamisuib@gmail.com</a>
+         <div id="cv-print-sheet" class="p-6 sm:p-10 overflow-y-auto space-y-6 text-sm text-zinc-700 dark:text-zinc-300 bg-white dark:bg-[#121215] transition-colors duration-300">
+            <div class="pb-5 border-b border-hairline dark:border-zinc-800">
+               <h2 class="text-2xl font-extrabold tracking-tight text-ink dark:text-[#FAFAFA]">SUIB UMAMI SITORUS</h2>
+               <p class="text-sm font-medium text-slateMuted dark:text-[#A1A1AA] mt-1" data-i18n="cv_role">Sarjana Teknologi Informasi · Spesialis Web &amp; Otomasi Sistem</p>
+               <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-600 dark:text-zinc-400">
+                  <a href="mailto:umamisuib@gmail.com" class="hover:text-ink dark:hover:text-[#FAFAFA] underline">umamisuib@gmail.com</a>
                   <span aria-hidden="true">·</span>
                   <span>+62 856-5815-3551</span>
                   <span aria-hidden="true">·</span>
-                  <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="hover:text-ink underline">github.com/UmamSitorus</a>
+                  <a href="https://github.com/UmamSitorus" target="_blank" rel="noopener noreferrer" class="hover:text-ink dark:hover:text-[#FAFAFA] underline">github.com/UmamSitorus</a>
                   <span aria-hidden="true">·</span>
-                  <a href="https://www.linkedin.com/in/suib-umami" target="_blank" rel="noopener noreferrer" class="hover:text-ink underline">linkedin.com/in/suib-umami</a>
+                  <a href="https://www.linkedin.com/in/suib-umami" target="_blank" rel="noopener noreferrer" class="hover:text-ink dark:hover:text-[#FAFAFA] underline">linkedin.com/in/suib-umami</a>
                </div>
             </div>
 
             <div>
-               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2" data-i18n="cv_sec_summary">Ringkasan Singkat</h4>
-               <p class="leading-relaxed text-zinc-700" data-i18n="cv_summary_text">
+               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2" data-i18n="cv_sec_summary">Ringkasan Singkat</h4>
+               <p class="leading-relaxed text-zinc-700 dark:text-zinc-300" data-i18n="cv_summary_text">
                   Spesialis Web &amp; Otomasi tersertifikasi Google AI (8 sertifikat Coursera) dan Komdigi. Berpengalaman membangun sistem web yang stabil, otomasi tugas harian yang menghemat kerja manual hingga 90%, serta integrasi AI untuk bisnis.
                </p>
             </div>
 
             <div>
-               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5" data-i18n="cv_sec_projects">Pengalaman &amp; Proyek Utama</h4>
+               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2.5" data-i18n="cv_sec_projects">Pengalaman &amp; Proyek Utama</h4>
                <div class="space-y-3">
                   <div>
-                     <p class="font-bold text-ink" data-i18n="cv_exp_1_title">Monitoring Kredit BPR Syariah Mustaqim &amp; Pengingat WhatsApp</p>
-                     <p class="text-zinc-600 text-xs mt-0.5" data-i18n="cv_exp_1">Membangun aplikasi monitoring cicilan BPR dengan pengingat WhatsApp otomatis sebelum jatuh tempo.</p>
+                     <p class="font-bold text-ink dark:text-[#FAFAFA]" data-i18n="cv_exp_1_title">Monitoring Kredit BPR Syariah Mustaqim &amp; Pengingat WhatsApp</p>
+                     <p class="text-zinc-600 dark:text-zinc-400 text-xs mt-0.5" data-i18n="cv_exp_1">Membangun aplikasi monitoring cicilan BPR dengan pengingat WhatsApp otomatis sebelum jatuh tempo.</p>
                   </div>
                   <div>
-                     <p class="font-bold text-ink" data-i18n="cv_exp_2_title">Sistem Verifikasi Pembayaran Otomatis</p>
-                     <p class="text-zinc-600 text-xs mt-0.5" data-i18n="cv_exp_2">Membuat sistem verifikasi pembayaran otomatis yang mengonfirmasi transaksi dalam hitungan detik tanpa data ganda.</p>
+                     <p class="font-bold text-ink dark:text-[#FAFAFA]" data-i18n="cv_exp_2_title">Sistem Verifikasi Pembayaran Otomatis</p>
+                     <p class="text-zinc-600 dark:text-zinc-400 text-xs mt-0.5" data-i18n="cv_exp_2">Membuat sistem verifikasi pembayaran otomatis yang mengonfirmasi transaksi dalam hitungan detik tanpa data ganda.</p>
                   </div>
                   <div>
-                     <p class="font-bold text-ink" data-i18n="cv_exp_3_title">Rekap Penjualan &amp; Stok Antar Cabang</p>
-                     <p class="text-zinc-600 text-xs mt-0.5" data-i18n="cv_exp_3">Menyiapkan sistem rekap penjualan harian antar cabang otomatis yang menghemat 21 jam kerja admin per minggu.</p>
+                     <p class="font-bold text-ink dark:text-[#FAFAFA]" data-i18n="cv_exp_3_title">Rekap Penjualan &amp; Stok Antar Cabang</p>
+                     <p class="text-zinc-600 dark:text-zinc-400 text-xs mt-0.5" data-i18n="cv_exp_3">Menyiapkan sistem rekap penjualan harian antar cabang otomatis yang menghemat 21 jam kerja admin per minggu.</p>
                   </div>
                </div>
             </div>
 
             <div>
-               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2.5" data-i18n="cv_sec_creds">Pendidikan &amp; Sertifikasi Resmi</h4>
-               <ul class="space-y-1.5 text-xs text-zinc-700">
-                  <li><strong>S1 Teknologi Informasi (Sarjana Teknologi Informasi)</strong> — Universitas Teuku Umar</li>
-                  <li><strong>Google AI Specialization (8x Terverifikasi)</strong> — Coursera (<a href="https://www.coursera.org/account/accomplishments/specialization/8MYTMAQ2PMI2" target="_blank" rel="noopener noreferrer" class="underline text-ink">8MYTMAQ2PMI2 ↗</a>)</li>
-                  <li><strong>Intermediate Web Developer</strong> — Komdigi Digital Talent Scholarship</li>
-                  <li><strong>Associate Data Science + Python</strong> — Komdigi Digital Talent Scholarship</li>
+               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2.5" data-i18n="cv_sec_creds">Pendidikan &amp; Sertifikasi Resmi</h4>
+               <ul class="space-y-1.5 text-xs text-zinc-700 dark:text-zinc-300">
+                  <li><strong class="text-ink dark:text-[#FAFAFA]">S1 Teknologi Informasi (Sarjana Teknologi Informasi)</strong> — Universitas Teuku Umar</li>
+                  <li><strong class="text-ink dark:text-[#FAFAFA]">Google AI Specialization (8x Terverifikasi)</strong> — Coursera (<a href="https://www.coursera.org/account/accomplishments/specialization/8MYTMAQ2PMI2" target="_blank" rel="noopener noreferrer" class="underline text-ink dark:text-[#FAFAFA]">8MYTMAQ2PMI2 ↗</a>)</li>
+                  <li><strong class="text-ink dark:text-[#FAFAFA]">Intermediate Web Developer</strong> — Komdigi Digital Talent Scholarship</li>
+                  <li><strong class="text-ink dark:text-[#FAFAFA]">Associate Data Science + Python</strong> — Komdigi Digital Talent Scholarship</li>
                </ul>
             </div>
 
             <div>
-               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2" data-i18n="cv_sec_skills">Keahlian &amp; Alat Kerja</h4>
-               <p class="text-xs text-zinc-700 leading-relaxed">
+               <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2" data-i18n="cv_sec_skills">Keahlian &amp; Alat Kerja</h4>
+               <p class="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed">
                   PHP 8 · Laravel · Node.js · MySQL / MariaDB · REST API · Webhook · Linux Cron · Google AI / Gemini · Python · Git
                </p>
             </div>
@@ -1378,12 +1431,14 @@
          // Update EN/ID Toggle Pills
          const btnEn = document.getElementById('lang-btn-en');
          const btnId = document.getElementById('lang-btn-id');
+         const activeLangClasses = 'px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 bg-ink text-white dark:bg-[#FAFAFA] dark:text-[#09090B] shadow-sm';
+         const inactiveLangClasses = 'px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 text-zinc-600 hover:text-ink dark:text-zinc-400 dark:hover:text-[#FAFAFA]';
          if (currentLang === 'en') {
-            btnEn.className = 'px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 bg-ink text-white shadow-sm';
-            btnId.className = 'px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 text-zinc-600 hover:text-ink';
+            btnEn.className = activeLangClasses;
+            btnId.className = inactiveLangClasses;
          } else {
-            btnId.className = 'px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 bg-ink text-white shadow-sm';
-            btnEn.className = 'px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-150 whitespace-nowrap shrink-0 text-zinc-600 hover:text-ink';
+            btnId.className = activeLangClasses;
+            btnEn.className = inactiveLangClasses;
          }
       }
 
@@ -1443,12 +1498,12 @@
 
       function filterProjects(category, tabEl) {
          document.querySelectorAll('.project-tab').forEach((btn) => {
-            btn.classList.remove('bg-ink', 'text-white', 'shadow-sm');
-            btn.classList.add('text-zinc-600', 'hover:text-ink');
+            btn.classList.remove('bg-ink', 'text-white', 'dark:bg-[#FAFAFA]', 'dark:text-[#09090B]', 'shadow-sm');
+            btn.classList.add('text-zinc-600', 'hover:text-ink', 'dark:text-zinc-400', 'dark:hover:text-[#FAFAFA]');
             btn.setAttribute('aria-selected', 'false');
          });
-         tabEl.classList.add('bg-ink', 'text-white', 'shadow-sm');
-         tabEl.classList.remove('text-zinc-600', 'hover:text-ink');
+         tabEl.classList.add('bg-ink', 'text-white', 'dark:bg-[#FAFAFA]', 'dark:text-[#09090B]', 'shadow-sm');
+         tabEl.classList.remove('text-zinc-600', 'hover:text-ink', 'dark:text-zinc-400', 'dark:hover:text-[#FAFAFA]');
          tabEl.setAttribute('aria-selected', 'true');
 
          document.querySelectorAll('.project-card').forEach((card) => {
@@ -1669,7 +1724,46 @@
          }
       });
 
-      // Initialize Language & API Preview on Load
+      // 8. Light / Dark Mode Theme Controller
+      const THEME_STORAGE_KEY = 'umami_portfolio_theme';
+
+      function applyTheme(theme, persist = false) {
+         const isDark = theme === 'dark';
+         document.documentElement.classList.toggle('dark', isDark);
+         document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+
+         const toggleBtn = document.getElementById('theme-toggle-btn');
+         if (toggleBtn) {
+            toggleBtn.setAttribute('aria-pressed', String(isDark));
+            toggleBtn.setAttribute('aria-label', isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
+         }
+
+         if (persist) {
+            try {
+               localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
+            } catch (err) {}
+         }
+      }
+
+      function toggleTheme() {
+         const nextTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+         applyTheme(nextTheme, true);
+      }
+
+      // Sync with OS theme changes only when user has not explicitly saved a preference
+      if (window.matchMedia) {
+         const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+         colorSchemeQuery.addEventListener?.('change', (e) => {
+            try {
+               if (!localStorage.getItem(THEME_STORAGE_KEY)) {
+                  applyTheme(e.matches ? 'dark' : 'light', false);
+               }
+            } catch (err) {}
+         });
+      }
+
+      // Initialize Theme, Language & API Preview on Load
+      applyTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light', false);
       setLanguage(currentLang);
       updateApiPreview();
    </script>
